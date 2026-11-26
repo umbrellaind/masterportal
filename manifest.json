@@ -1,0 +1,22 @@
+{
+  "name": "Umbrella Master Portal",
+  "short_name": "Umbrella Master",
+  "description": "Umbrella Healthcare Consultancy Unified Portal Hub",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f7ff",
+  "theme_color": "#b91c1c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://placehold.co/192x192/b91c1c/fcd34d?text=UMB",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/512x512/b91c1c/fcd34d?text=UMBRELLA",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
