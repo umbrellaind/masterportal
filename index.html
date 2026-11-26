@@ -31,8 +31,11 @@
   <header class="bg-white border-b border-sky-200 sticky top-0 z-30">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#b91c1c] border-2 border-[#d97706] flex items-center justify-center text-amber-300 font-extrabold text-sm">
-          ☂
+        <div class="w-11 h-11 rounded-xl bg-white border-2 border-[#d97706] p-1 flex items-center justify-center overflow-hidden shadow-xs">
+          <img src="https://lh3.googleusercontent.com/d/1WZm8Ycvv62ppRSQkGQ22Vv2wnwiN8n9u"
+               onerror="this.onerror=null;this.src='logo.gif';"
+               alt="Umbrella Revolving Logo"
+               class="w-full h-full object-contain" />
         </div>
         <div>
           <div class="flex items-center gap-2">
@@ -63,6 +66,18 @@
 
       <!-- Left: Sign In & Sign Up -->
       <section class="lg:col-span-5 bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+        <!-- Official Umbrella Letterhead & Revolving Umbrella Emblem -->
+        <div class="mb-4 pb-3 border-b border-sky-100 flex items-center justify-between gap-2 bg-white rounded-xl p-2 border border-sky-100">
+          <img src="https://lh3.googleusercontent.com/d/1UtoAEaX2tGEW_OCwEIsFxXkBzjz7nikg"
+               onerror="this.onerror=null;this.src='logo new.png';"
+               alt="Umbrella Official Letterhead"
+               class="h-12 sm:h-14 w-auto max-w-[78%] object-contain" />
+          <img src="https://lh3.googleusercontent.com/d/1WZm8Ycvv62ppRSQkGQ22Vv2wnwiN8n9u"
+               onerror="this.onerror=null;this.src='logo.gif';"
+               alt="Umbrella Revolving Emblem"
+               class="w-11 h-11 sm:w-12 sm:h-12 object-contain shrink-0" />
+        </div>
+
         <div class="grid grid-cols-2 gap-1.5 p-1 bg-sky-50 border border-sky-200 rounded-xl mb-4">
           <button id="tab-signin" type="button" onclick="setAuthTab('signin')"
             class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white">
@@ -78,7 +93,7 @@
         <form id="signin-form" class="space-y-3.5">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
-            <input id="login-mobile" type="text" required placeholder="e.g., 8299432460"
+            <input id="login-mobile" type="text" required placeholder="Enter registered mobile number"
               class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
           <div>
@@ -95,13 +110,6 @@
             class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white font-bold py-2.5 text-sm transition">
             Sign In
           </button>
-          <div class="pt-2 border-t border-sky-100 flex items-center justify-between text-xs">
-            <span class="text-slate-500">Owner Admin Demo:</span>
-            <button type="button" onclick="fillAdminDemo()"
-              class="font-bold text-[#b91c1c] bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-lg">
-              Fill Admin (8299432460 / 4921)
-            </button>
-          </div>
         </form>
 
         <!-- Sign Up Form -->
@@ -166,6 +174,21 @@
 
   <!-- ==================== PAGE 2: MY PORTALS ==================== -->
   <main id="page-portals" class="hidden flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-5">
+    <!-- Official Letterhead Strip on Dashboard -->
+    <div class="bg-white border border-sky-200 rounded-2xl px-4 py-2.5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <img src="https://lh3.googleusercontent.com/d/1UtoAEaX2tGEW_OCwEIsFxXkBzjz7nikg"
+           onerror="this.onerror=null;this.src='logo new.png';"
+           alt="Umbrella Letterhead"
+           class="h-11 sm:h-13 w-auto object-contain" />
+      <div class="flex items-center gap-2">
+        <img src="https://lh3.googleusercontent.com/d/1WZm8Ycvv62ppRSQkGQ22Vv2wnwiN8n9u"
+             onerror="this.onerror=null;this.src='logo.gif';"
+             alt="Umbrella Emblem"
+             class="w-9 h-9 object-contain" />
+        <span class="text-xs font-extrabold text-[#b91c1c]">Unified Workspace</span>
+      </div>
+    </div>
+
     <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="text-base sm:text-lg font-extrabold text-slate-900">My Portals</h1>
@@ -326,9 +349,9 @@
     const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbyVGjEekOUrlRIa6apnrGtVM5KRcOrYw3C1kdOeax-EffqGv0GcxtCilUTLp_rl0N3rxQ/exec";
 
     // =========================================================================
-    // 2. INITIAL STATE & LOCAL FALLBACK DATA
+    // 2. INITIAL STATE (CLEAN — NO DEMO USERS OR DEMO CREDENTIALS)
     // =========================================================================
-    const STORE_KEY = "umbrella_master_simple_v1";
+    const STORE_KEY = "umbrella_master_live_v1";
 
     const DEFAULT_DATA = {
       notice: "Welcome to Umbrella Master Portal. Sign-up requests stay Pending until Admin approval.",
@@ -338,35 +361,11 @@
         { id: "P3", name: "KPI Collection Portal", category: "Indicators", url: "https://umbrellaind.github.io/kpicollection/" },
         { id: "P4", name: "Policy & SOP Portal", category: "SOP / Policy", url: "https://umbrellaind.github.io/policyportal/" }
       ],
-      users: [
-        { id: "U01", mobile: "8299432460", name: "Dr. Kshitij Kumar", hospital: "Umbrella Healthcare Consultancy", password: "4921", isAdmin: true, status: "Active", access: ["P1", "P2", "P3", "P4"] },
-        { id: "U02", mobile: "8941864359", name: "Prashant Singh", hospital: "Umbrella Healthcare Consultancy", password: "1234", isAdmin: false, status: "Active", access: ["P1", "P2"] },
-        { id: "U03", mobile: "9235268271", name: "Kunal Verma", hospital: "Umbrella Healthcare Consultancy", password: "1234", isAdmin: false, status: "Active", access: ["P1", "P2", "P4"] },
-        { id: "U04", mobile: "8081789844", name: "Himanshu", hospital: "Umbrella Healthcare Consultancy", password: "1234", isAdmin: false, status: "Active", access: ["P1", "P2", "P3", "P4"] }
-      ],
+      users: [],
       pending: [],
-      logs: [
-        { time: "26 Nov 2026, 09:30 AM", name: "Dr. Kshitij Kumar", mobile: "8299432460", type: "Login" }
-      ],
-      // Auto-matched legacy credentials keyed by mobile -> portalId
-      legacyCreds: {
-        "8941864359": {
-          P1: { id: "8941864359", pass: "umb@prashant", sheet: "P1_P2_Users" },
-          P2: { id: "8941864359", pass: "umb@prashant", sheet: "P1_P2_Users" }
-        },
-        "9235268271": {
-          P1: { id: "9235268271", pass: "umb@kunal", sheet: "P1_P2_Users" },
-          P2: { id: "9235268271", pass: "umb@kunal", sheet: "P1_P2_Users" },
-          P4: { id: "kunal.staff", pass: "sop@kunal", sheet: "P4_Staff_Users" }
-        },
-        "8081789844": {
-          P1: { id: "8081789844", pass: "umb@himanshu", sheet: "P1_P2_Users" },
-          P2: { id: "8081789844", pass: "umb@himanshu", sheet: "P1_P2_Users" },
-          P3: { id: "sky.kpi", pass: "kpi@sky", sheet: "P3_Users" },
-          P4: { id: "kssh.admin", pass: "pol@kssh", sheet: "P4_Admin_Users" }
-        }
-      },
-      customCreds: {}, // userId_portalId -> { id, pass }
+      logs: [],
+      legacyCreds: {},
+      customCreds: {},
       sessionMobile: ""
     };
 
@@ -489,12 +488,6 @@
         : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
     }
 
-    function fillAdminDemo() {
-      document.getElementById("login-mobile").value = "8299432460";
-      document.getElementById("login-password").value = "4921";
-      showToast("Owner Admin demo credentials filled.");
-    }
-
     document.getElementById("signin-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const mobile = document.getElementById("login-mobile").value.trim();
@@ -505,18 +498,30 @@
       if (MASTER_API_URL) {
         try {
           const res = await apiPost({ action: "login", mobile, password });
-          if (!res.ok) {
-            msg.textContent = res.message || "Invalid login or Pending approval.";
+          if (!res || !res.ok) {
+            msg.textContent = (res && res.message) || "Invalid login or Pending Admin approval.";
             msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
             msg.classList.remove("hidden");
             return;
           }
-          if (remember) { db.sessionMobile = res.user.mobile; saveDb(); }
+          msg.classList.add("hidden");
+          if (!db.users.some(u => u.mobile === res.user.mobile)) {
+            db.users.push(res.user);
+          } else {
+            db.users = db.users.map(u => u.mobile === res.user.mobile ? res.user : u);
+          }
+          if (remember) {
+            db.sessionMobile = res.user.mobile;
+          }
           if (res.legacyCreds) db.legacyCreds[res.user.mobile] = res.legacyCreds;
+          saveDb();
           loginSuccess(res.user, "Login");
           return;
         } catch (err) {
-          showToast("Server error, checking local cache.");
+          msg.textContent = "Unable to reach Google Apps Script server. Please check internet or deployment access.";
+          msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+          msg.classList.remove("hidden");
+          return;
         }
       }
 
