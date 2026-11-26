@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#b91c1c" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Umbrella Master Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f7ff;
+      color: #0f172a;
+    }
+    .tick-box {
+      width: 18px;
+      height: 18px;
+      accent-color: #b91c1c;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Toast Banner (replaces alert/confirm) -->
+  <div id="toast" class="hidden fixed bottom-4 right-4 z-50 bg-slate-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg"></div>
+
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-sky-200 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#b91c1c] border-2 border-[#d97706] flex items-center justify-center text-amber-300 font-extrabold text-sm">
+          ☂
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-sm sm:text-base text-slate-900">Umbrella Healthcare Consultancy</span>
+            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-950 border border-amber-300">Master Portal</span>
+          </div>
+          <p class="text-[11px] font-bold text-[#b91c1c]">Always &amp; Anywhere With You</p>
+        </div>
+      </div>
+
+      <div id="header-user-controls" class="hidden flex items-center gap-2">
+        <span id="header-user-label" class="text-xs font-bold text-slate-800 bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl"></span>
+        <button id="btn-admin-panel" type="button" onclick="openAdminPanel()"
+          class="hidden text-xs font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 px-3 py-1.5 rounded-xl">
+          Admin Panel
+        </button>
+        <button type="button" onclick="logout()"
+          class="text-xs font-bold bg-red-50 hover:bg-[#b91c1c] text-[#b91c1c] hover:text-white border border-red-200 px-3 py-1.5 rounded-xl transition">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== PAGE 1: LOGIN, SIGN-UP & NEWS FEED ==================== -->
+  <main id="page-login" class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- Left: Sign In & Sign Up -->
+      <section class="lg:col-span-5 bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-sky-50 border border-sky-200 rounded-xl mb-4">
+          <button id="tab-signin" type="button" onclick="setAuthTab('signin')"
+            class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white">
+            Sign In
+          </button>
+          <button id="tab-signup" type="button" onclick="setAuthTab('signup')"
+            class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white">
+            Sign Up
+          </button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+            <input id="login-mobile" type="text" required placeholder="e.g., 8299432460"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <input id="login-password" type="password" required placeholder="Enter password"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+          </div>
+          <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+            <input id="login-remember" type="checkbox" checked class="tick-box" />
+            <span>Remember me (Auto-login on this device)</span>
+          </label>
+          <div id="login-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2"></div>
+          <button type="submit"
+            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white font-bold py-2.5 text-sm transition">
+            Sign In
+          </button>
+          <div class="pt-2 border-t border-sky-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500">Owner Admin Demo:</span>
+            <button type="button" onclick="fillAdminDemo()"
+              class="font-bold text-[#b91c1c] bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-lg">
+              Fill Admin (8299432460 / 4921)
+            </button>
+          </div>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="hidden space-y-3">
+          <p class="text-xs bg-amber-50 border border-amber-200 text-amber-950 rounded-xl p-2.5">
+            Sign-up submits as <strong>Pending</strong>. Login starts after Admin approval.
+          </p>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+            <input id="su-mobile" type="text" required placeholder="10-digit mobile"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+            <input id="su-name" type="text" required placeholder="Your full name"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Hospital Name</label>
+            <input id="su-hospital" type="text" required placeholder="Hospital / Organization name"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <input id="su-password" type="password" required placeholder="Create password"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+          </div>
+          <div id="signup-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2"></div>
+          <button type="submit"
+            class="w-full rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 text-sm transition">
+            Submit Access Request
+          </button>
+        </form>
+      </section>
+
+      <!-- Right: Internal Notices + Dual News Tabs -->
+      <section class="lg:col-span-7 space-y-4">
+        <!-- Internal Notice -->
+        <div class="bg-white border-l-4 border-[#d97706] border-y border-r border-sky-200 rounded-2xl p-4 shadow-xs">
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-[#b91c1c] mb-1">Internal Notice</div>
+          <p id="login-notice-text" class="text-xs sm:text-sm font-semibold text-slate-900"></p>
+        </div>
+
+        <!-- News Box -->
+        <div class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+          <div class="grid grid-cols-2 gap-1.5 p-1 bg-sky-50 border border-sky-200 rounded-xl mb-4">
+            <button id="news-tab-accred" type="button" onclick="setNewsTab('accred')"
+              class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white">
+              Accreditation
+            </button>
+            <button id="news-tab-aam" type="button" onclick="setNewsTab('aam')"
+              class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white">
+              Aam Aadmi Health
+            </button>
+          </div>
+          <div id="news-list" class="space-y-3"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== PAGE 2: MY PORTALS ==================== -->
+  <main id="page-portals" class="hidden flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-5">
+    <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-2">
+      <div>
+        <h1 class="text-base sm:text-lg font-extrabold text-slate-900">My Portals</h1>
+        <p id="dash-notice-text" class="text-xs text-slate-600 mt-0.5"></p>
+      </div>
+      <span id="portal-count-badge" class="text-xs font-extrabold bg-amber-100 text-amber-950 border border-amber-300 px-3 py-1 rounded-full"></span>
+    </div>
+
+    <!-- Portal Cards Grid -->
+    <div id="portals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4"></div>
+
+    <!-- In-App Iframe Viewer -->
+    <div id="iframe-panel" class="hidden bg-white border border-sky-200 rounded-2xl overflow-hidden shadow-sm">
+      <div class="bg-sky-50 border-b border-sky-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeIframe()"
+            class="rounded-lg bg-white border border-sky-300 hover:bg-sky-100 px-3 py-1.5 text-xs font-extrabold text-slate-900">
+            ← Back to Portals
+          </button>
+          <span id="iframe-title" class="text-xs sm:text-sm font-extrabold text-slate-900"></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="refreshIframe()"
+            class="rounded-lg bg-white border border-sky-200 hover:bg-sky-100 px-3 py-1.5 text-xs font-bold text-slate-800">
+            ↻ Refresh
+          </button>
+          <a id="iframe-external" href="#" target="_blank" rel="noopener noreferrer"
+            class="rounded-lg bg-[#b91c1c] text-white px-3 py-1.5 text-xs font-bold">
+            New Tab ↗
+          </a>
+        </div>
+      </div>
+      <iframe id="portal-iframe" src="" class="w-full h-[72vh] bg-white border-0"></iframe>
+    </div>
+  </main>
+
+  <!-- ==================== PAGE 3: ADMIN PANEL ==================== -->
+  <main id="page-admin" class="hidden flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
+    <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex items-center justify-between">
+      <div>
+        <span class="text-[10px] font-extrabold uppercase bg-red-100 text-[#b91c1c] px-2 py-0.5 rounded-full">Admin Only</span>
+        <h1 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">Admin Control Panel</h1>
+      </div>
+      <button type="button" onclick="backToMyPortals()"
+        class="rounded-xl bg-slate-900 text-white text-xs font-bold px-4 py-2">
+        ← Back to My Portals
+      </button>
+    </div>
+
+    <!-- 1. Pending Sign-Up Approvals -->
+    <section class="bg-white border-2 border-amber-300 rounded-2xl p-5 shadow-xs">
+      <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">Pending Sign-Up Approvals</h2>
+      <div id="pending-list" class="space-y-2"></div>
+    </section>
+
+    <!-- 2. Tick-Box Access Matrix -->
+    <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-sm sm:text-base font-extrabold text-slate-900">Tick-Box Access Matrix</h2>
+        <button type="button" onclick="saveMatrix()"
+          class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold px-4 py-2">
+          Save Matrix
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead id="matrix-head" class="bg-sky-50 border-b border-sky-200"></thead>
+          <tbody id="matrix-body" class="divide-y divide-sky-100"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. + Add Portal & Notice Updater -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+        <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">+ Add Portal</h2>
+        <form id="add-portal-form" class="space-y-3">
+          <input id="new-p-name" type="text" required placeholder="Portal Name (e.g., Audit Portal)"
+            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm" />
+          <input id="new-p-cat" type="text" required placeholder="Category (e.g., Quality / Ops)"
+            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm" />
+          <input id="new-p-url" type="url" required placeholder="Portal URL (https://...)"
+            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-xs font-mono" />
+          <button type="submit"
+            class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-bold px-4 py-2">
+            Add Portal
+          </button>
+        </form>
+      </section>
+
+      <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+        <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">Update Internal Notice</h2>
+        <div class="space-y-3">
+          <textarea id="admin-notice-box" rows="3"
+            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-xs sm:text-sm"></textarea>
+          <button type="button" onclick="updateNotice()"
+            class="rounded-xl bg-[#d97706] hover:bg-amber-700 text-white text-xs sm:text-sm font-bold px-4 py-2">
+            Save Notice
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- 4. Login Logs Table -->
+    <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+      <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">Login Logs</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead class="bg-sky-50 border-b border-sky-200">
+            <tr>
+              <th class="py-2.5 px-3">Time</th>
+              <th class="py-2.5 px-3">User</th>
+              <th class="py-2.5 px-3">Mobile</th>
+              <th class="py-2.5 px-3">Type</th>
+            </tr>
+          </thead>
+          <tbody id="logs-body" class="divide-y divide-sky-100"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== ID / PASS DRAWER / MODAL ==================== -->
+  <div id="cred-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
+    <div class="bg-white border border-sky-200 rounded-2xl w-full max-w-md p-5 shadow-xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="cred-modal-title" class="text-sm sm:text-base font-extrabold text-slate-900">Portal ID / Pass</h3>
+        <button type="button" onclick="closeCredModal()" class="text-xs font-bold text-slate-500 hover:text-slate-900">✕ Close</button>
+      </div>
+      <p id="cred-source-note" class="text-xs text-slate-600 bg-sky-50 border border-sky-200 rounded-xl p-2.5"></p>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Portal Login ID / Username</label>
+          <div class="flex gap-2">
+            <input id="cred-id-input" type="text" class="flex-1 rounded-xl border border-sky-200 px-3 py-2 text-xs sm:text-sm font-semibold" />
+            <button type="button" onclick="copyText('cred-id-input', 'ID')" class="rounded-xl bg-sky-100 hover:bg-sky-200 px-3 py-2 text-xs font-bold">Copy</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Portal Password</label>
+          <div class="flex gap-2">
+            <input id="cred-pass-input" type="text" class="flex-1 rounded-xl border border-sky-200 px-3 py-2 text-xs sm:text-sm font-mono font-bold" />
+            <button type="button" onclick="copyText('cred-pass-input', 'Password')" class="rounded-xl bg-amber-100 hover:bg-amber-200 px-3 py-2 text-xs font-bold">Copy</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeCredModal()" class="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold">Cancel</button>
+        <button type="button" onclick="savePortalCred()" class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white px-4 py-2 text-xs font-bold">Save ID / Pass</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. MASTER BACKEND URL CONFIG
+    // =========================================================================
+    const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbyVGjEekOUrlRIa6apnrGtVM5KRcOrYw3C1kdOeax-EffqGv0GcxtCilUTLp_rl0N3rxQ/exec";
+
+    // =========================================================================
+    // 2. INITIAL STATE & LOCAL FALLBACK DATA
+    // =========================================================================
+    const STORE_KEY = "umbrella_master_simple_v1";
+
+    const DEFAULT_DATA = {
+      notice: "Welcome to Umbrella Master Portal. Sign-up requests stay Pending until Admin approval.",
+      portals: [
+        { id: "P1", name: "Umbrella Calendar", category: "Planning", url: "https://umbrellaind.github.io/associateplancalendar/" },
+        { id: "P2", name: "UDCP Portal", category: "Quality / NC", url: "https://umbrellaind.github.io/nccloserportal/" },
+        { id: "P3", name: "KPI Collection Portal", category: "Indicators", url: "https://umbrellaind.github.io/kpicollection/" },
+        { id: "P4", name: "Policy & SOP Portal", category: "SOP / Policy", url: "https://umbrellaind.github.io/policyportal/" }
+      ],
+      users: [
+        { id: "U01", mobile: "8299432460", name: "Dr. Kshitij Kumar", hospital: "Umbrella Healthcare Consultancy", password: "4921", isAdmin: true, status: "Active", access: ["P1", "P2", "P3", "P4"] },
+        { id: "U02", mobile: "8941864359", name: "Prashant Singh", hospital: "Umbrella Healthcare Consultancy", password: "1234", isAdmin: false, status: "Active", access: ["P1", "P2"] },
+        { id: "U03", mobile: "9235268271", name: "Kunal Verma", hospital: "Umbrella Healthcare Consultancy", password: "1234", isAdmin: false, status: "Active", access: ["P1", "P2", "P4"] },
+        { id: "U04", mobile: "8081789844", name: "Himanshu", hospital: "Umbrella Healthcare Consultancy", password: "1234", isAdmin: false, status: "Active", access: ["P1", "P2", "P3", "P4"] }
+      ],
+      pending: [],
+      logs: [
+        { time: "26 Nov 2026, 09:30 AM", name: "Dr. Kshitij Kumar", mobile: "8299432460", type: "Login" }
+      ],
+      // Auto-matched legacy credentials keyed by mobile -> portalId
+      legacyCreds: {
+        "8941864359": {
+          P1: { id: "8941864359", pass: "umb@prashant", sheet: "P1_P2_Users" },
+          P2: { id: "8941864359", pass: "umb@prashant", sheet: "P1_P2_Users" }
+        },
+        "9235268271": {
+          P1: { id: "9235268271", pass: "umb@kunal", sheet: "P1_P2_Users" },
+          P2: { id: "9235268271", pass: "umb@kunal", sheet: "P1_P2_Users" },
+          P4: { id: "kunal.staff", pass: "sop@kunal", sheet: "P4_Staff_Users" }
+        },
+        "8081789844": {
+          P1: { id: "8081789844", pass: "umb@himanshu", sheet: "P1_P2_Users" },
+          P2: { id: "8081789844", pass: "umb@himanshu", sheet: "P1_P2_Users" },
+          P3: { id: "sky.kpi", pass: "kpi@sky", sheet: "P3_Users" },
+          P4: { id: "kssh.admin", pass: "pol@kssh", sheet: "P4_Admin_Users" }
+        }
+      },
+      customCreds: {}, // userId_portalId -> { id, pass }
+      sessionMobile: ""
+    };
+
+    const NEWS_ITEMS = {
+      accred: [
+        { tag: "NABH", title: "NABH 5th Edition & Pre-Assessment Checklist", detail: "Verify clinical KPIs, fire NOC, and biomedical waste records before assessment." },
+        { tag: "NABL", title: "ISO 15189 Lab Quality Control & EQAS", detail: "Keep internal QC charts, instrument calibration, and EQAS corrective actions updated." },
+        { tag: "JCI", title: "JCI Patient Safety & High-Alert Medication", detail: "Ensure two-identifier checks and safe medication labeling across wards." },
+        { tag: "ACHS", title: "ACHS Clinical Governance & Patient Feedback", detail: "Review departmental audits and close patient feedback loops regularly." }
+      ],
+      aam: [
+        { tag: "FSSAI", title: "Packaged Food Labels, Salt & Sugar Awareness", detail: "Check nutrition labels and keep daily salt/sugar intake moderate for family health." },
+        { tag: "Ayushman", title: "Ayushman Bharat & Senior Citizen Health Cover", detail: "Eligible families and 70+ senior citizens can check empaneled hospital benefits." },
+        { tag: "MoHFW", title: "Seasonal & Preventive Care Advisory", detail: "Stay hydrated, follow vaccination/hygiene norms, and avoid self-medication." }
+      ]
+    };
+
+    let db = loadDb();
+    let currentUser = null;
+    let activeCredPortalId = null;
+
+    function loadDb() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (raw) return { ...JSON.parse(JSON.stringify(DEFAULT_DATA)), ...JSON.parse(raw) };
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_DATA));
+    }
+
+    function saveDb() {
+      localStorage.setItem(STORE_KEY, JSON.stringify(db));
+    }
+
+    function showToast(text) {
+      const el = document.getElementById("toast");
+      el.textContent = text;
+      el.classList.remove("hidden");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => el.classList.add("hidden"), 2800);
+    }
+
+    // =========================================================================
+    // 3. API HELPER (REAL GOOGLE APPS SCRIPT CALLS WHEN URL IS SET)
+    // =========================================================================
+    async function apiGet(params = {}) {
+      if (!MASTER_API_URL) return null;
+      const qs = new URLSearchParams(params).toString();
+      const res = await fetch(`${MASTER_API_URL}?${qs}`);
+      return await res.json();
+    }
+
+    async function apiPost(payload) {
+      if (!MASTER_API_URL) return null;
+      const res = await fetch(MASTER_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    }
+
+    // =========================================================================
+    // 4. BOOT & AUTO-LOGIN
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", async () => {
+      renderNotices();
+      setNewsTab("accred");
+
+      if (MASTER_API_URL) {
+        try {
+          const remote = await apiGet({ action: "init" });
+          if (remote && remote.ok) {
+            if (remote.notice) db.notice = remote.notice;
+            if (remote.portals) db.portals = remote.portals;
+            if (remote.users) db.users = remote.users;
+            if (remote.pending) db.pending = remote.pending;
+            if (remote.logs) db.logs = remote.logs;
+            if (remote.legacyCreds) db.legacyCreds = remote.legacyCreds;
+            saveDb();
+            renderNotices();
+          }
+        } catch (e) {}
+      }
+
+      if (db.sessionMobile) {
+        const u = db.users.find(x => x.mobile === db.sessionMobile && x.status === "Active");
+        if (u) {
+          loginSuccess(u, "Auto-Login");
+          return;
+        }
+      }
+      showPage("login");
+    });
+
+    function showPage(page) {
+      document.getElementById("page-login").classList.toggle("hidden", page !== "login");
+      document.getElementById("page-portals").classList.toggle("hidden", page !== "portals");
+      document.getElementById("page-admin").classList.toggle("hidden", page !== "admin");
+      document.getElementById("header-user-controls").classList.toggle("hidden", page === "login");
+    }
+
+    function renderNotices() {
+      document.getElementById("login-notice-text").textContent = db.notice;
+      document.getElementById("dash-notice-text").textContent = db.notice;
+      document.getElementById("admin-notice-box").value = db.notice;
+    }
+
+    // =========================================================================
+    // 5. PAGE 1: SIGN IN, SIGN UP & NEWS
+    // =========================================================================
+    function setAuthTab(mode) {
+      const isIn = mode === "signin";
+      document.getElementById("signin-form").classList.toggle("hidden", !isIn);
+      document.getElementById("signup-form").classList.toggle("hidden", isIn);
+      document.getElementById("tab-signin").className = isIn
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
+      document.getElementById("tab-signup").className = !isIn
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
+    }
+
+    function fillAdminDemo() {
+      document.getElementById("login-mobile").value = "8299432460";
+      document.getElementById("login-password").value = "4921";
+      showToast("Owner Admin demo credentials filled.");
+    }
+
+    document.getElementById("signin-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const mobile = document.getElementById("login-mobile").value.trim();
+      const password = document.getElementById("login-password").value.trim();
+      const remember = document.getElementById("login-remember").checked;
+      const msg = document.getElementById("login-msg");
+
+      if (MASTER_API_URL) {
+        try {
+          const res = await apiPost({ action: "login", mobile, password });
+          if (!res.ok) {
+            msg.textContent = res.message || "Invalid login or Pending approval.";
+            msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+            msg.classList.remove("hidden");
+            return;
+          }
+          if (remember) { db.sessionMobile = res.user.mobile; saveDb(); }
+          if (res.legacyCreds) db.legacyCreds[res.user.mobile] = res.legacyCreds;
+          loginSuccess(res.user, "Login");
+          return;
+        } catch (err) {
+          showToast("Server error, checking local cache.");
+        }
+      }
+
+      const isPending = db.pending.some(p => p.mobile === mobile);
+      if (isPending) {
+        msg.textContent = "Your sign-up request is Pending Admin approval.";
+        msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-amber-50 text-amber-950 border border-amber-300";
+        msg.classList.remove("hidden");
+        return;
+      }
+
+      const user = db.users.find(u => u.mobile === mobile && String(u.password) === password);
+      if (!user) {
+        msg.textContent = "Invalid mobile number or password.";
+        msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+        msg.classList.remove("hidden");
+        return;
+      }
+      if (user.status !== "Active") {
+        msg.textContent = `Account status is ${user.status}.`;
+        msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+        msg.classList.remove("hidden");
+        return;
+      }
+
+      msg.classList.add("hidden");
+      if (remember) {
+        db.sessionMobile = user.mobile;
+        saveDb();
+      }
+      loginSuccess(user, "Login");
+    });
+
+    document.getElementById("signup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const mobile = document.getElementById("su-mobile").value.trim();
+      const name = document.getElementById("su-name").value.trim();
+      const hospital = document.getElementById("su-hospital").value.trim();
+      const password = document.getElementById("su-password").value.trim();
+      const msg = document.getElementById("signup-msg");
+
+      const entry = { mobile, name, hospital, password, status: "Pending" };
+
+      if (MASTER_API_URL) {
+        try {
+          const res = await apiPost({ action: "signup", ...entry });
+          if (res && res.ok) {
+            db.pending.push(entry);
+            saveDb();
+            msg.textContent = "Request sent as Pending. Admin approval required.";
+            msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-emerald-50 text-emerald-900 border border-emerald-200";
+            msg.classList.remove("hidden");
+            e.target.reset();
+            return;
+          }
+        } catch (err) {}
+      }
+
+      db.pending.push(entry);
+      saveDb();
+      msg.textContent = "Saved as Pending. Admin can approve in Admin Panel.";
+      msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-emerald-50 text-emerald-900 border border-emerald-200";
+      msg.classList.remove("hidden");
+      e.target.reset();
+    });
+
+    function setNewsTab(tab) {
+      const isAcc = tab === "accred";
+      document.getElementById("news-tab-accred").className = isAcc
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
+      document.getElementById("news-tab-aam").className = !isAcc
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
+
+      const items = isAcc ? NEWS_ITEMS.accred : NEWS_ITEMS.aam;
+      document.getElementById("news-list").innerHTML = items.map(n => `
+        <div class="p-3.5 rounded-xl bg-sky-50/60 border border-sky-100">
+          <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-950 border border-amber-300">${n.tag}</span>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 mt-1.5">${n.title}</h3>
+          <p class="text-xs text-slate-600 mt-0.5">${n.detail}</p>
+        </div>
+      `).join("");
+    }
+
+    // =========================================================================
+    // 6. PAGE 2: MY PORTALS & CREDENTIALS
+    // =========================================================================
+    function loginSuccess(user, type) {
+      currentUser = user;
+      const nowStr = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+      db.logs.unshift({ time: nowStr, name: user.name, mobile: user.mobile, type });
+      if (db.logs.length > 100) db.logs.pop();
+      saveDb();
+
+      document.getElementById("header-user-label").textContent = `${user.name} (${user.mobile})`;
+      document.getElementById("btn-admin-panel").classList.toggle("hidden", !user.isAdmin);
+      renderPortals();
+      showPage("portals");
+    }
+
+    function logout() {
+      currentUser = null;
+      db.sessionMobile = "";
+      saveDb();
+      closeIframe();
+      showPage("login");
+    }
+
+    function backToMyPortals() {
+      renderPortals();
+      showPage("portals");
+    }
+
+    function getPortalCred(user, portalId) {
+      const custom = db.customCreds[`${user.id}_${portalId}`];
+      if (custom && (custom.id || custom.pass)) {
+        return { id: custom.id || "", pass: custom.pass || "", note: "Saved custom ID/Pass for this portal" };
+      }
+      const leg = (db.legacyCreds[user.mobile] || {})[portalId];
+      if (leg) {
+        return { id: leg.id || "", pass: leg.pass || "", note: `Auto-matched from sheet: ${leg.sheet}` };
+      }
+      return { id: "", pass: "", note: "No legacy match found. You can save your ID/Pass here." };
+    }
+
+    function renderPortals() {
+      if (!currentUser) return;
+      currentUser = db.users.find(u => u.id === currentUser.id) || currentUser;
+
+      const allowed = db.portals.filter(p => Array.isArray(currentUser.access) && currentUser.access.includes(p.id));
+      document.getElementById("portal-count-badge").textContent = `${allowed.length} Portals`;
+
+      const grid = document.getElementById("portals-grid");
+      if (!allowed.length) {
+        grid.innerHTML = `<div class="col-span-full bg-white border border-sky-200 rounded-2xl p-6 text-center text-sm text-slate-600">No portals ticked yet for your account.</div>`;
+        return;
+      }
+
+      grid.innerHTML = allowed.map(p => `
+        <div class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between gap-4">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-900 border border-sky-200">${p.category || "Portal"}</span>
+              <span class="text-[11px] font-mono font-bold text-[#b91c1c]">${p.id}</span>
+            </div>
+            <h2 class="text-base font-extrabold text-slate-900 mt-2.5">${p.name}</h2>
+            <p class="text-xs font-mono text-slate-500 truncate mt-1">${p.url}</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-sky-100">
+            <button type="button" onclick="openSameTab('${p.id}')"
+              class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2">
+              Open (Same Tab)
+            </button>
+            <a href="${p.url}" target="_blank" rel="noopener noreferrer"
+              class="rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-slate-900 text-xs font-bold px-3.5 py-2">
+              New Tab ↗
+            </a>
+            <button type="button" onclick="openCredModal('${p.id}')"
+              class="ml-auto rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 text-xs font-bold px-3 py-2">
+              ID / Pass
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openSameTab(portalId) {
+      const p = db.portals.find(x => x.id === portalId);
+      if (!p) return;
+      document.getElementById("iframe-title").textContent = `${p.name} (${p.id})`;
+      document.getElementById("iframe-external").href = p.url;
+      document.getElementById("portal-iframe").src = p.url;
+      document.getElementById("iframe-panel").classList.remove("hidden");
+      document.getElementById("iframe-panel").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function refreshIframe() {
+      const frame = document.getElementById("portal-iframe");
+      frame.src = frame.src;
+      showToast("Portal refreshed.");
+    }
+
+    function closeIframe() {
+      document.getElementById("portal-iframe").src = "";
+      document.getElementById("iframe-panel").classList.add("hidden");
+    }
+
+    function openCredModal(portalId) {
+      const p = db.portals.find(x => x.id === portalId);
+      if (!p || !currentUser) return;
+      activeCredPortalId = portalId;
+      const c = getPortalCred(currentUser, portalId);
+      document.getElementById("cred-modal-title").textContent = `${p.name} — ID / Pass`;
+      document.getElementById("cred-source-note").textContent = c.note;
+      document.getElementById("cred-id-input").value = c.id;
+      document.getElementById("cred-pass-input").value = c.pass;
+      document.getElementById("cred-modal").classList.remove("hidden");
+    }
+
+    function closeCredModal() {
+      activeCredPortalId = null;
+      document.getElementById("cred-modal").classList.add("hidden");
+    }
+
+    function savePortalCred() {
+      if (!currentUser || !activeCredPortalId) return;
+      db.customCreds[`${currentUser.id}_${activeCredPortalId}`] = {
+        id: document.getElementById("cred-id-input").value.trim(),
+        pass: document.getElementById("cred-pass-input").value.trim()
+      };
+      saveDb();
+      closeCredModal();
+      showToast("Saved ID / Pass for this portal.");
+    }
+
+    function copyText(inputId, label) {
+      const el = document.getElementById(inputId);
+      el.select();
+      document.execCommand("copy");
+      showToast(`${label} copied.`);
+    }
+
+    // =========================================================================
+    // 7. PAGE 3: ADMIN PANEL
+    // =========================================================================
+    function openAdminPanel() {
+      if (!currentUser || !currentUser.isAdmin) return;
+      renderPending();
+      renderMatrix();
+      renderLogs();
+      renderNotices();
+      showPage("admin");
+    }
+
+    function renderPending() {
+      const box = document.getElementById("pending-list");
+      if (!db.pending.length) {
+        box.innerHTML = `<p class="text-xs text-slate-500">No pending sign-up requests.</p>`;
+        return;
+      }
+      box.innerHTML = db.pending.map((p, idx) => `
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs sm:text-sm">
+            <strong>${p.name}</strong> • ${p.mobile} • <span class="text-slate-600">${p.hospital}</span>
+          </div>
+          <button type="button" onclick="approvePending(${idx})"
+            class="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-1.5">
+            Approve
+          </button>
+        </div>
+      `).join("");
+    }
+
+    async function approvePending(idx) {
+      const req = db.pending[idx];
+      if (!req) return;
+      const newUser = {
+        id: "U" + (db.users.length + 1),
+        mobile: req.mobile,
+        name: req.name,
+        hospital: req.hospital,
+        password: req.password,
+        isAdmin: false,
+        status: "Active",
+        access: ["P1"]
+      };
+      db.users.push(newUser);
+      db.pending.splice(idx, 1);
+      saveDb();
+      if (MASTER_API_URL) {
+        try { await apiPost({ action: "approveUser", user: newUser, mobile: req.mobile }); } catch (e) {}
+      }
+      renderPending();
+      renderMatrix();
+      showToast(`${newUser.name} approved (Active).`);
+    }
+
+    function renderMatrix() {
+      const head = document.getElementById("matrix-head");
+      head.innerHTML = `<tr>
+        <th class="py-2.5 px-3 font-extrabold">User / Hospital</th>
+        ${db.portals.map(p => `<th class="py-2.5 px-3 text-center font-extrabold">${p.id}<br><span class="text-[10px] font-semibold">${p.name}</span></th>`).join("")}
+      </tr>`;
+
+      const body = document.getElementById("matrix-body");
+      body.innerHTML = db.users.map((u, uIdx) => `
+        <tr>
+          <td class="py-2.5 px-3">
+            <div class="font-bold text-slate-900">${u.name} <span class="text-xs font-normal text-slate-500">(${u.mobile})</span></div>
+            <div class="text-xs text-slate-600">${u.hospital}</div>
+          </td>
+          ${db.portals.map(p => {
+            const checked = Array.isArray(u.access) && u.access.includes(p.id);
+            return `<td class="py-2.5 px-3 text-center">
+              <input type="checkbox" class="tick-box" ${checked ? "checked" : ""} onchange="toggleTick(${uIdx}, '${p.id}', this.checked)" />
+            </td>`;
+          }).join("")}
+        </tr>
+      `).join("");
+    }
+
+    function toggleTick(uIdx, portalId, checked) {
+      const u = db.users[uIdx];
+      u.access = u.access || [];
+      if (checked && !u.access.includes(portalId)) u.access.push(portalId);
+      if (!checked) u.access = u.access.filter(x => x !== portalId);
+    }
+
+    async function saveMatrix() {
+      saveDb();
+      if (MASTER_API_URL) {
+        try { await apiPost({ action: "saveMatrix", users: db.users, portals: db.portals }); } catch (e) {}
+      }
+      showToast("Access Matrix saved.");
+    }
+
+    document.getElementById("add-portal-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("new-p-name").value.trim();
+      const category = document.getElementById("new-p-cat").value.trim();
+      const url = document.getElementById("new-p-url").value.trim();
+      const id = "P" + (db.portals.length + 1);
+      const portal = { id, name, category, url };
+
+      db.portals.push(portal);
+      db.users.forEach(u => {
+        if (u.isAdmin && !u.access.includes(id)) u.access.push(id);
+      });
+      saveDb();
+      if (MASTER_API_URL) {
+        try { await apiPost({ action: "addPortal", portal }); } catch (e) {}
+      }
+      e.target.reset();
+      renderMatrix();
+      showToast(`Added ${id} (${name}).`);
+    });
+
+    async function updateNotice() {
+      const val = document.getElementById("admin-notice-box").value.trim();
+      if (!val) return;
+      db.notice = val;
+      saveDb();
+      renderNotices();
+      if (MASTER_API_URL) {
+        try { await apiPost({ action: "updateNotice", notice: val }); } catch (e) {}
+      }
+      showToast("Notice updated.");
+    }
+
+    function renderLogs() {
+      document.getElementById("logs-body").innerHTML = db.logs.map(l => `
+        <tr>
+          <td class="py-2 px-3 text-xs text-slate-600">${l.time}</td>
+          <td class="py-2 px-3 font-bold">${l.name}</td>
+          <td class="py-2 px-3 font-mono text-xs">${l.mobile}</td>
+          <td class="py-2 px-3 text-xs font-semibold text-[#b91c1c]">${l.type}</td>
+        </tr>
+      `).join("");
+    }
+  </script>
+</body>
+</html>
