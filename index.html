@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#b91c1c" />
   <link rel="manifest" href="manifest.json" />
-  <title>Umbrella Master Portal | Umbrella Healthcare Consultancy</title>
+  <title>Umbrella Master Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -22,49 +20,23 @@
       accent-color: #b91c1c;
       cursor: pointer;
     }
-    /* Clean subtle scrollbars */
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #e0f2fe;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #94a3b8;
-      border-radius: 6px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #64748b;
-    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- Toast Notification Banner (Replaces alert/confirm) -->
-  <div id="toast" class="hidden fixed bottom-4 right-4 z-50 bg-slate-900 text-white text-xs sm:text-sm font-semibold px-4 py-3 rounded-xl shadow-xl border border-slate-700 max-w-sm"></div>
+  <!-- Toast Banner -->
+  <div id="toast" class="hidden fixed bottom-4 right-4 z-50 bg-slate-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg"></div>
 
-  <!-- Global Loading Overlay -->
-  <div id="global-loader" class="hidden fixed inset-0 z-50 bg-slate-900/35 backdrop-blur-[1px] flex items-center justify-center p-4">
-    <div class="bg-white border border-sky-200 rounded-2xl px-5 py-4 shadow-xl flex items-center gap-3">
-      <div class="w-5 h-5 border-2 border-[#b91c1c] border-t-transparent rounded-full animate-spin"></div>
-      <span id="loader-text" class="text-xs sm:text-sm font-bold text-slate-800">Syncing with Umbrella Master Database...</span>
-    </div>
-  </div>
-
-  <!-- ==================== STICKY HEADER ==================== -->
-  <header class="bg-white border-b border-sky-200 sticky top-0 z-30 shadow-xs">
-    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-sky-200 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <!-- Revolving Red Umbrella GIF Logo -->
-        <div class="w-11 h-11 rounded-xl bg-white border-2 border-[#d97706] flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
-          <img
-            src="https://drive.google.com/thumbnail?id=1WZm8Ycvv62ppRSQkGQ22Vv2wnwiN8n9u&sz=w200"
-            alt="Umbrella Logo"
-            class="w-9 h-9 object-contain"
-            onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='logo.gif';}else{this.outerHTML='<span class=\'text-[#b91c1c] font-extrabold text-xl\'>☂</span>';}"
-          />
-        </div>
+        <img
+          src="logo.gif"
+          onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1WZm8Ycvv62ppRSQkGQ22Vv2wnwiN8n9u&sz=w200';"
+          alt="Umbrella Logo"
+          class="w-11 h-11 rounded-xl object-contain bg-white border-2 border-[#d97706] p-0.5 shrink-0"
+        />
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <span class="font-extrabold text-sm sm:text-base text-slate-900">Umbrella Healthcare Consultancy</span>
@@ -74,25 +46,17 @@
         </div>
       </div>
 
-      <!-- Logged-in Controls -->
       <div id="header-user-controls" class="hidden flex flex-wrap items-center gap-2">
-        <div class="flex items-center gap-1.5 bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl">
-          <span id="header-user-name" class="text-xs font-extrabold text-slate-900"></span>
-          <span id="header-user-segment" class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-950 border border-amber-300"></span>
-          <span id="header-user-mobile" class="text-[11px] font-mono text-slate-600 hidden sm:inline"></span>
-        </div>
-
-        <button id="btn-toggle-messages" type="button" onclick="toggleMessagesDrawer()"
-          class="relative text-xs font-extrabold bg-sky-100 hover:bg-sky-200 text-slate-900 border border-sky-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5">
-          <span>💬 Messages</span>
-          <span id="unread-badge" class="hidden bg-[#b91c1c] text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
+        <span id="header-user-label" class="text-xs font-bold text-slate-800 bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl"></span>
+        <button id="btn-messages" type="button" onclick="openMessagesModal()"
+          class="relative text-xs font-extrabold bg-sky-100 hover:bg-sky-200 text-sky-950 border border-sky-300 px-3 py-1.5 rounded-xl">
+          💬 Notices &amp; Chat
+          <span id="unread-badge" class="hidden ml-1 bg-[#b91c1c] text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
         </button>
-
         <button id="btn-admin-panel" type="button" onclick="openAdminPanel()"
-          class="hidden text-xs font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 px-3 py-1.5 rounded-xl transition">
-          ⚙ Admin Panel
+          class="hidden text-xs font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 px-3 py-1.5 rounded-xl">
+          Admin Panel
         </button>
-
         <button type="button" onclick="logout()"
           class="text-xs font-bold bg-red-50 hover:bg-[#b91c1c] text-[#b91c1c] hover:text-white border border-red-200 px-3 py-1.5 rounded-xl transition">
           Logout
@@ -105,127 +69,113 @@
   <main id="page-login" class="flex-1 max-w-6xl w-full mx-auto px-4 py-5 space-y-5">
 
     <!-- Umbrella Letterhead Banner -->
-    <div class="bg-white border border-sky-200 rounded-2xl p-2.5 sm:p-3 shadow-xs flex items-center justify-center overflow-hidden">
+    <div class="bg-white border border-sky-200 rounded-2xl p-2.5 shadow-xs flex items-center justify-center overflow-hidden">
       <img
-        src="https://drive.google.com/thumbnail?id=1UtoAEaX2tGEW_OCwEIsFxXkBzjz7nikg&sz=w1000"
-        alt="Umbrella Healthcare Consultancy Letterhead"
-        class="max-h-24 sm:max-h-28 w-auto max-w-full object-contain rounded-xl"
-        onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='logo new.png';}else{this.parentElement.classList.add('hidden');}"
+        src="logo new.png"
+        onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1UtoAEaX2tGEW_OCwEIsFxXkBzjz7nikg&sz=w1200';"
+        alt="Umbrella Letterhead"
+        class="max-h-24 sm:max-h-28 w-auto object-contain"
       />
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-      <!-- Left: Sign In & Sign Up Card -->
+      <!-- Left: Sign In & Sign Up -->
       <section class="lg:col-span-5 bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
-        <div class="flex items-center gap-3 pb-4 mb-4 border-b border-sky-100">
-          <div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center overflow-hidden shrink-0">
-            <img
-              src="https://drive.google.com/thumbnail?id=1WZm8Ycvv62ppRSQkGQ22Vv2wnwiN8n9u&sz=w200"
-              alt="Umbrella Emblem"
-              class="w-9 h-9 object-contain"
-              onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='logo.gif';}else{this.outerHTML='<span class=\'text-[#b91c1c] font-extrabold text-xl\'>☂</span>';}"
-            />
-          </div>
-          <div>
-            <h1 class="text-base font-extrabold text-slate-900">Portal Access Gateway</h1>
-            <p class="text-xs text-slate-600">Sign in with your registered mobile number</p>
-          </div>
-        </div>
-
-        <!-- Auth Mode Switch -->
         <div class="grid grid-cols-2 gap-1.5 p-1 bg-sky-50 border border-sky-200 rounded-xl mb-4">
           <button id="tab-signin" type="button" onclick="setAuthTab('signin')"
-            class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white transition">
+            class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white">
             Sign In
           </button>
           <button id="tab-signup" type="button" onclick="setAuthTab('signup')"
-            class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white transition">
+            class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white">
             Sign Up
           </button>
         </div>
 
-        <!-- Sign In Form (Zero Demo Data) -->
+        <!-- Mandatory GPS Notice -->
+        <div class="mb-3.5 rounded-xl bg-sky-50 border border-sky-200 p-3 text-xs text-slate-800">
+          <div class="font-extrabold text-[#b91c1c] mb-0.5">📍 Location Access Required</div>
+          <p>Aapko personalized hospital/field items aur local updates dikhane ke liye login ke samay <strong>Location (GPS) access</strong> allow karna anivarya hai.</p>
+        </div>
+
+        <!-- Sign In Form -->
         <form id="signin-form" class="space-y-3.5">
           <div>
-            <label for="login-mobile" class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
-            <input id="login-mobile" type="tel" required autocomplete="username" placeholder="Enter 10-digit mobile number"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+            <input id="login-mobile" type="tel" required placeholder="10-digit mobile number"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
           <div>
-            <label for="login-password" class="block text-xs font-bold text-slate-700 mb-1">Password</label>
-            <input id="login-password" type="password" required autocomplete="current-password" placeholder="Enter your password"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <input id="login-password" type="password" required placeholder="Enter password"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
-          <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer select-none">
+          <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
             <input id="login-remember" type="checkbox" checked class="tick-box" />
-            <span>Remember me on this device</span>
+            <span>Remember me (Auto-login with GPS check)</span>
           </label>
-          <div id="login-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2.5"></div>
-          <button id="signin-submit-btn" type="submit"
-            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white font-bold py-2.5 text-sm shadow-xs transition">
-            Sign In to Master Portal
+          <div id="login-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2"></div>
+          <button id="btn-signin-submit" type="submit"
+            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white font-bold py-2.5 text-sm transition">
+            Allow GPS &amp; Sign In
           </button>
         </form>
 
         <!-- Sign Up Form -->
         <form id="signup-form" class="hidden space-y-3">
-          <p class="text-xs bg-amber-50 border border-amber-200 text-amber-950 rounded-xl p-2.5 leading-relaxed">
-            New registrations are submitted with <strong>Pending</strong> status. Access activates once approved by the Administrator.
+          <p class="text-xs bg-amber-50 border border-amber-200 text-amber-950 rounded-xl p-2.5">
+            Sign-up submits as <strong>Pending</strong>. Login starts after Admin approval.
           </p>
           <div>
-            <label for="su-mobile" class="block text-xs font-bold text-slate-700 mb-1">Mobile Number *</label>
-            <input id="su-mobile" type="tel" required placeholder="10-digit mobile number"
+            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+            <input id="su-mobile" type="tel" required placeholder="10-digit mobile"
               class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
           <div>
-            <label for="su-name" class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
-            <input id="su-name" type="text" required placeholder="Enter your full name"
+            <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+            <input id="su-name" type="text" required placeholder="Your full name"
               class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
           <div>
-            <label for="su-hospital" class="block text-xs font-bold text-slate-700 mb-1">Hospital / Organization Name *</label>
-            <input id="su-hospital" type="text" required placeholder="Hospital or organization name"
+            <label class="block text-xs font-bold text-slate-700 mb-1">Hospital / Organization Name</label>
+            <input id="su-hospital" type="text" required placeholder="Hospital / Organization name"
               class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
           <div>
-            <label for="su-segment" class="block text-xs font-bold text-slate-700 mb-1">Category / Segment *</label>
-            <select id="su-segment" required
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category / Segment</label>
+            <select id="su-role"
               class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]">
             </select>
           </div>
           <div>
-            <label for="su-password" class="block text-xs font-bold text-slate-700 mb-1">Create Password *</label>
-            <input id="su-password" type="password" required placeholder="Create a secure password"
+            <label class="block text-xs font-bold text-slate-700 mb-1">Create Password</label>
+            <input id="su-password" type="password" required placeholder="Create password"
               class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]" />
           </div>
-          <div id="signup-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2.5"></div>
-          <button id="signup-submit-btn" type="submit"
+          <div id="signup-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2"></div>
+          <button type="submit"
             class="w-full rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 text-sm transition">
             Submit Access Request
           </button>
         </form>
       </section>
 
-      <!-- Right: Internal Notice + Dual Healthcare News Feed -->
+      <!-- Right: Internal Notices + Dual News Tabs -->
       <section class="lg:col-span-7 space-y-4">
         <div class="bg-white border-l-4 border-[#d97706] border-y border-r border-sky-200 rounded-2xl p-4 shadow-xs">
-          <div class="flex items-center justify-between gap-2 mb-1">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#b91c1c]">Internal Notice Board</span>
-            <span id="login-notice-meta" class="text-[11px] text-slate-500"></span>
-          </div>
-          <p id="login-notice-title" class="text-xs sm:text-sm font-extrabold text-slate-900"></p>
-          <p id="login-notice-text" class="text-xs sm:text-sm font-medium text-slate-700 mt-0.5 leading-relaxed">Loading latest announcement...</p>
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-[#b91c1c] mb-1">Internal Notice</div>
+          <p id="login-notice-text" class="text-xs sm:text-sm font-semibold text-slate-900">Loading latest notice...</p>
         </div>
 
         <div class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
           <div class="grid grid-cols-2 gap-1.5 p-1 bg-sky-50 border border-sky-200 rounded-xl mb-4">
             <button id="news-tab-accred" type="button" onclick="setNewsTab('accred')"
-              class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white transition">
-              Accreditation (NABH / NABL)
+              class="py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white">
+              Accreditation
             </button>
             <button id="news-tab-aam" type="button" onclick="setNewsTab('aam')"
-              class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white transition">
+              class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white">
               Aam Aadmi Health
             </button>
           </div>
@@ -236,261 +186,107 @@
     </div>
   </main>
 
-  <!-- ==================== PAGE 2: MY PORTALS & MESSENGER ==================== -->
-  <main id="page-portals" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 py-5 space-y-5">
+  <!-- ==================== PAGE 2: MY PORTALS ==================== -->
+  <main id="page-portals" class="hidden flex-1 max-w-6xl w-full mx-auto px-4 py-5 space-y-4">
 
-    <!-- Umbrella Letterhead Banner -->
-    <div class="bg-white border border-sky-200 rounded-2xl p-2 sm:p-2.5 shadow-xs flex items-center justify-center overflow-hidden">
+    <!-- Letterhead Strip -->
+    <div class="bg-white border border-sky-200 rounded-2xl p-2 shadow-xs flex items-center justify-center">
       <img
-        src="https://drive.google.com/thumbnail?id=1UtoAEaX2tGEW_OCwEIsFxXkBzjz7nikg&sz=w1000"
-        alt="Umbrella Healthcare Consultancy Letterhead"
-        class="max-h-20 sm:max-h-24 w-auto max-w-full object-contain rounded-xl"
-        onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='logo new.png';}else{this.parentElement.classList.add('hidden');}"
+        src="logo new.png"
+        onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1UtoAEaX2tGEW_OCwEIsFxXkBzjz7nikg&sz=w1200';"
+        alt="Umbrella Letterhead"
+        class="max-h-20 w-auto object-contain"
       />
     </div>
 
-    <!-- Top Workspace Summary & Quick Notice -->
-    <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+    <!-- Personal Notice Highlight Banner (if user has personal/segment notices) -->
+    <div id="personal-notice-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 shadow-xs space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-[#b91c1c]">📩 Personal / Segment Notices For You</span>
+        <button type="button" onclick="openMessagesModal()" class="text-xs font-extrabold text-[#b91c1c] underline">Open Full Inbox →</button>
+      </div>
+      <div id="personal-notice-items" class="space-y-2"></div>
+    </div>
+
+    <!-- Dashboard Header -->
+    <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-2">
       <div>
-        <div class="flex flex-wrap items-center gap-2">
-          <h1 class="text-base sm:text-lg font-extrabold text-slate-900">My Permitted Portals</h1>
-          <span id="portal-count-badge" class="text-xs font-extrabold bg-amber-100 text-amber-950 border border-amber-300 px-3 py-0.5 rounded-full">0 Portals</span>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base sm:text-lg font-extrabold text-slate-900">My Portals</h1>
+          <span id="user-role-badge" class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200"></span>
         </div>
-        <p id="dash-notice-text" class="text-xs text-slate-600 mt-1"></p>
+        <p id="dash-notice-text" class="text-xs text-slate-600 mt-0.5"></p>
       </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <button type="button" onclick="refreshWorkspaceData()"
-          class="rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-slate-800 text-xs font-bold px-3.5 py-2 transition">
-          ↻ Sync Data
-        </button>
-        <button type="button" onclick="toggleMessagesDrawer(true)"
-          class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 transition flex items-center gap-1.5">
-          <span>💬 Personal Notices &amp; Chat</span>
-          <span id="dash-unread-pill" class="hidden bg-amber-300 text-slate-950 text-[10px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
-        </button>
+      <div class="flex items-center gap-2">
+        <span id="gps-verified-badge" class="text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full">📍 GPS Verified</span>
+        <span id="portal-count-badge" class="text-xs font-extrabold bg-amber-100 text-amber-950 border border-amber-300 px-3 py-1 rounded-full"></span>
       </div>
     </div>
 
-    <!-- Highlighted Personal Notices Strip (Shows unread INDIVIDUAL / SEGMENT notices on top) -->
-    <div id="personal-notices-highlight" class="hidden space-y-2"></div>
+    <!-- Portal Cards Grid (Inline Iframe renders directly below the clicked card's row!) -->
+    <div id="portals-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
 
-    <!-- Collapsible Inter-Office Messenger & Personal Notices Panel -->
-    <section id="messages-drawer" class="hidden bg-white border-2 border-sky-300 rounded-2xl p-4 sm:p-5 shadow-md space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-sky-100">
-        <div>
-          <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-red-100 text-[#b91c1c]">Inter-Office Communication</span>
-          <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mt-1">Personal Notices &amp; Team Messenger</h2>
-        </div>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="loadMessagesFromServer(true)"
-            class="rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-xs font-bold px-3 py-1.5 text-slate-800">
-            ↻ Refresh Inbox
-          </button>
-          <button type="button" onclick="toggleMessagesDrawer(false)"
-            class="rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold px-3 py-1.5 text-slate-800">
-            ✕ Close
-          </button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <!-- Left: Send Message / Reply -->
-        <form id="user-send-msg-form" class="lg:col-span-5 bg-sky-50/60 border border-sky-200 rounded-2xl p-4 space-y-3">
-          <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">Send Message / Reply</h3>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Send To</label>
-            <select id="user-msg-target" required
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900">
-              <option value="ALL|ALL|All Team">All Team (Group Broadcast)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Tag</label>
-            <select id="user-msg-tag"
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900">
-              <option value="Chat">Chat / Update</option>
-              <option value="Task">Task Update</option>
-              <option value="Urgent">Urgent</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Message</label>
-            <textarea id="user-msg-text" rows="3" required placeholder="Type your message or reply..."
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]"></textarea>
-          </div>
-          <button type="submit"
-            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-bold py-2.5 transition">
-            Send Message
-          </button>
-        </form>
-
-        <!-- Right: Inbox Feed -->
-        <div class="lg:col-span-7 space-y-2.5 max-h-[420px] overflow-y-auto pr-1" id="user-messages-feed">
-          <p class="text-xs text-slate-500">Loading messages...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Permitted Portal Cards Grid -->
-    <div id="portals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-
-    <!-- In-App Iframe Viewer -->
-    <div id="iframe-panel" class="hidden bg-white border border-sky-200 rounded-2xl overflow-hidden shadow-md">
-      <div class="bg-sky-50 border-b border-sky-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="closeIframe()"
-            class="rounded-xl bg-white border border-sky-300 hover:bg-sky-100 px-3 py-1.5 text-xs font-extrabold text-slate-900">
-            ← Back to Portals
-          </button>
-          <span id="iframe-title" class="text-xs sm:text-sm font-extrabold text-slate-900"></span>
-        </div>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="openCredModal(activeIframePortalId)"
-            class="rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 text-xs font-extrabold text-amber-950">
-            🔑 ID / Pass
-          </button>
-          <button type="button" onclick="refreshIframe()"
-            class="rounded-xl bg-white border border-sky-200 hover:bg-sky-100 px-3 py-1.5 text-xs font-bold text-slate-800">
-            ↻ Refresh
-          </button>
-          <a id="iframe-external" href="#" target="_blank" rel="noopener noreferrer"
-            class="rounded-xl bg-[#b91c1c] text-white px-3 py-1.5 text-xs font-bold">
-            New Tab ↗
-          </a>
-        </div>
-      </div>
-      <iframe id="portal-iframe" src="" class="w-full h-[74vh] bg-white border-0"></iframe>
-    </div>
   </main>
 
-  <!-- ==================== PAGE 3: ADMIN CONTROL PANEL ==================== -->
-  <main id="page-admin" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 py-5 space-y-6">
-
-    <!-- Admin Header Banner -->
-    <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+  <!-- ==================== PAGE 3: ADMIN PANEL ==================== -->
+  <main id="page-admin" class="hidden flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
+    <div class="bg-white border border-sky-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-2">
       <div>
-        <span class="text-[10px] font-extrabold uppercase bg-red-100 text-[#b91c1c] px-2.5 py-0.5 rounded-full">Administrator Control Center</span>
-        <h1 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">Umbrella Master Admin Panel</h1>
+        <span class="text-[10px] font-extrabold uppercase bg-red-100 text-[#b91c1c] px-2 py-0.5 rounded-full">Admin Only</span>
+        <h1 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">Admin Control Panel</h1>
       </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <button type="button" onclick="refreshAdminData()"
-          class="rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-slate-900 text-xs font-bold px-3.5 py-2">
-          ↻ Sync Sheet
-        </button>
-        <button type="button" onclick="backToMyPortals()"
-          class="rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2">
-          ← Back to My Portals
-        </button>
-      </div>
+      <button type="button" onclick="backToMyPortals()"
+        class="rounded-xl bg-slate-900 text-white text-xs font-bold px-4 py-2">
+        ← Back to My Portals
+      </button>
     </div>
 
     <!-- 1. Pending Sign-Up Approvals -->
     <section class="bg-white border-2 border-amber-300 rounded-2xl p-5 shadow-xs">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <h2 class="text-sm sm:text-base font-extrabold text-slate-900">1. Pending Sign-Up Approvals</h2>
-        <span id="pending-count-badge" class="text-xs font-extrabold bg-amber-100 text-amber-950 px-2.5 py-0.5 rounded-full">0 Pending</span>
-      </div>
-      <div id="pending-list" class="space-y-2.5"></div>
+      <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">1. Pending Sign-Up Approvals</h2>
+      <div id="pending-list" class="space-y-2"></div>
     </section>
 
-    <!-- 2. + Add / Edit User & Portal Passwords Directly -->
+    <!-- 2. Admin Direct User & Portal Credentials Entry -->
     <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h2 class="text-sm sm:text-base font-extrabold text-slate-900">2. Add / Edit User &amp; Portal Credentials Directly</h2>
-          <p class="text-xs text-slate-600">Create an active user or edit an existing user's segment, master password, and portal IDs/Passwords directly in <code class="font-mono text-[#b91c1c]">Master_Users</code>.</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <select id="admin-edit-user-picker" onchange="loadUserIntoAdminForm(this.value)"
-            class="rounded-xl border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-slate-900">
-            <option value="">+ Create Brand New User</option>
-          </select>
-        </div>
+      <div>
+        <h2 class="text-sm sm:text-base font-extrabold text-slate-900">2. Add / Update User &amp; Portal ID/Passwords Directly</h2>
+        <p class="text-xs text-slate-600 mt-0.5">Saves directly into <strong>Master_Users</strong> single-row database (including P1–Pn UserID &amp; Password).</p>
       </div>
-
-      <form id="admin-upsert-user-form" class="space-y-4">
-        <input type="hidden" id="au-userid" value="" />
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number *</label>
-            <input id="au-mobile" type="tel" required placeholder="10-digit mobile"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
-            <input id="au-name" type="text" required placeholder="Full name"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Hospital / Organization</label>
-            <input id="au-hospital" type="text" placeholder="Hospital or organization"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Category / Segment *</label>
-            <select id="au-segment" required
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold">
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Master Login Password *</label>
-            <input id="au-password" type="text" placeholder="Set master password"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-mono font-bold" />
-          </div>
-          <div class="flex flex-col justify-end gap-2">
-            <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-              <input id="au-is-admin" type="checkbox" class="tick-box" />
-              <span>Grant Admin Access (Is_Admin)</span>
-            </label>
-          </div>
+      <form id="admin-user-form" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <input id="au-mobile" type="tel" required placeholder="Mobile (10-digit)" class="rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold" />
+          <input id="au-name" type="text" required placeholder="Full Name" class="rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold" />
+          <input id="au-hospital" type="text" required placeholder="Hospital / Org" class="rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
+          <select id="au-role" class="rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold"></select>
+          <input id="au-password" type="text" required placeholder="Master Login Password" class="rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-mono font-bold" />
         </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Notes (Optional)</label>
-          <input id="au-notes" type="text" placeholder="Designation or remarks"
-            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
-        </div>
-
-        <!-- Dynamic Portal Credential Inputs (P1..Pn) -->
-        <div class="bg-sky-50/70 border border-sky-200 rounded-2xl p-4 space-y-3">
-          <div class="text-xs font-extrabold uppercase tracking-wide text-slate-800">Portal-Wise Saved Credentials (Master_Users Columns)</div>
-          <div id="au-portal-creds-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <button type="submit"
-            class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-extrabold px-5 py-2.5 transition">
-            Save User &amp; Portal Credentials to Sheet
-          </button>
-          <button type="button" onclick="resetAdminUserForm()"
-            class="rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-4 py-2.5">
-            Clear Form
+        <div id="admin-user-portal-creds" class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-sky-50/60 border border-sky-100 rounded-xl p-3"></div>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs text-slate-500">Tip: Enter an existing Mobile Number to update that user's credentials.</span>
+          <button type="submit" class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-extrabold px-5 py-2.5">
+            Save User &amp; Passwords to Sheet
           </button>
         </div>
       </form>
     </section>
 
-    <!-- 3. Tick-Box Access Matrix (with Segment Filter) -->
+    <!-- 3. Tick-Box Access Matrix with Segment Filter -->
     <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 class="text-sm sm:text-base font-extrabold text-slate-900">3. Tick-Box Portal Access Matrix</h2>
-          <p class="text-xs text-slate-600">Tick portals for each active user and click Save Matrix.</p>
-        </div>
+      <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex flex-wrap items-center gap-2">
-          <label for="matrix-segment-filter" class="text-xs font-bold text-slate-700">Filter Segment:</label>
+          <h2 class="text-sm sm:text-base font-extrabold text-slate-900">3. Tick-Box Access Matrix</h2>
           <select id="matrix-segment-filter" onchange="renderMatrix()"
-            class="rounded-xl border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-bold text-slate-900">
-            <option value="ALL">All Segments</option>
+            class="rounded-xl border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-slate-800">
+            <option value="ALL">All Categories</option>
           </select>
-          <button type="button" onclick="saveMatrix()"
-            class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold px-4 py-2 shadow-xs">
-            Save Matrix
-          </button>
         </div>
+        <button type="button" onclick="saveMatrix()"
+          class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold px-4 py-2">
+          Save Matrix
+        </button>
       </div>
-
-      <div class="overflow-x-auto border border-sky-100 rounded-xl">
+      <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs sm:text-sm">
           <thead id="matrix-head" class="bg-sky-50 border-b border-sky-200"></thead>
           <tbody id="matrix-body" class="divide-y divide-sky-100"></tbody>
@@ -498,297 +294,279 @@
       </div>
     </section>
 
-    <!-- 4. Send Personal Notice / Direct Message & Sent History -->
+    <!-- 4. Send Personal Notice / Inter-Office Message -->
     <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs space-y-4">
-      <div>
-        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-950 border border-amber-300">Person-to-Person &amp; Broadcast</span>
-        <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mt-1">4. Send Personal Notice / Direct Message</h2>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <form id="admin-send-notice-form" class="lg:col-span-5 bg-sky-50/60 border border-sky-200 rounded-2xl p-4 space-y-3">
+      <h2 class="text-sm sm:text-base font-extrabold text-slate-900">4. Send Personal Notice / Inter-Office Message</h2>
+      <form id="admin-personal-msg-form" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Recipient Type</label>
-            <select id="adm-msg-target-type" onchange="onAdminTargetTypeChange()"
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm font-bold text-slate-900">
-              <option value="INDIVIDUAL">Individual Person (1-to-1)</option>
-              <option value="SEGMENT">Specific Category / Segment</option>
-              <option value="ALL">All Staff (Broadcast)</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Send To Type</label>
+            <select id="pm-target-type" onchange="updatePmTargetOptions()"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-bold">
+              <option value="INDIVIDUAL">Specific Person (1-to-1)</option>
+              <option value="SEGMENT">Category / Segment</option>
+              <option value="ALL">All Team Members</option>
             </select>
           </div>
-
-          <div id="adm-msg-target-value-wrap">
-            <label id="adm-msg-target-label" class="block text-xs font-bold text-slate-700 mb-1">Select Person</label>
-            <select id="adm-msg-target-value"
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900">
+          <div id="pm-target-value-wrap">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Select Recipient</label>
+            <select id="pm-target-value"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold">
             </select>
           </div>
-
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Notice / Subject Tag</label>
-            <select id="adm-msg-tag"
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Notice Tag</label>
+            <select id="pm-tag"
+              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-semibold">
               <option value="Personal Notice">Personal Notice</option>
-              <option value="Task">Task Assignment</option>
-              <option value="Urgent">Urgent Instruction</option>
-              <option value="Chat">Direct Chat</option>
+              <option value="Urgent Instruction">Urgent Instruction</option>
+              <option value="Field Task">Field Task</option>
+              <option value="General Update">General Update</option>
             </select>
           </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Message / Instruction *</label>
-            <textarea id="adm-msg-body" rows="3" required placeholder="Write personal notice or instruction..."
-              class="w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]"></textarea>
-          </div>
-
-          <button type="submit"
-            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-extrabold py-2.5 transition">
-            Send &amp; Save to Sheet
-          </button>
-        </form>
-
-        <!-- Sent & Received Messages Log with Read Receipts -->
-        <div class="lg:col-span-7 space-y-2.5 max-h-[420px] overflow-y-auto pr-1" id="admin-messages-log"></div>
-      </div>
+        </div>
+        <textarea id="pm-message-text" rows="2" required placeholder="Type personal notice or instruction here (saved permanently in Google Sheet)..."
+          class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3.5 py-2 text-xs sm:text-sm"></textarea>
+        <button type="submit"
+          class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-extrabold px-5 py-2">
+          Send &amp; Save Notice
+        </button>
+      </form>
     </section>
 
-    <!-- 5. + Add Portal, + Add Category/Segment & Update Global Notice -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-      <!-- Add Portal -->
+    <!-- 5. Add Portal, Add Category & Public Notice -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
-        <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-1">5A. + Add New Portal</h2>
-        <p class="text-xs text-slate-500 mb-3">Adds portal to directory, matrix &amp; expands <code class="font-mono">Master_Users</code>.</p>
+        <h2 class="text-sm font-extrabold text-slate-900 mb-3">5A. + Add Portal</h2>
         <form id="add-portal-form" class="space-y-2.5">
-          <input id="new-p-name" type="text" required placeholder="Portal Name (e.g., Audit Portal)"
+          <input id="new-p-name" type="text" required placeholder="Portal Name"
             class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
-          <input id="new-p-cat" type="text" required placeholder="Category (e.g., Quality / Ops)"
+          <input id="new-p-cat" type="text" required placeholder="Category (e.g., Audit)"
             class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
-          <input id="new-p-url" type="url" required placeholder="Portal URL (https://...)"
+          <input id="new-p-url" type="url" required placeholder="https://..."
             class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs font-mono" />
-          <input id="new-p-desc" type="text" placeholder="Short description (optional)"
-            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
           <button type="submit"
-            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs sm:text-sm font-bold py-2">
-            + Add Portal
+            class="w-full rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs font-bold py-2">
+            Add Portal
           </button>
         </form>
       </section>
 
-      <!-- Add Segment / Category -->
-      <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
-        <div>
-          <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-1">5B. + Add Category / Segment</h2>
-          <p class="text-xs text-slate-500 mb-3">Saved permanently in <code class="font-mono">User_Segments</code>.</p>
-          <form id="add-segment-form" class="space-y-2.5">
-            <input id="new-seg-name" type="text" required placeholder="New Category (e.g., Auditor, Partner)"
-              class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
-            <button type="submit"
-              class="w-full rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold py-2">
-              + Add Category
-            </button>
-          </form>
-        </div>
-        <div class="mt-4 pt-3 border-t border-sky-100">
-          <div class="text-[11px] font-bold text-slate-600 mb-1.5">Active Categories:</div>
-          <div id="admin-segments-badges" class="flex flex-wrap gap-1.5"></div>
-        </div>
+      <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+        <h2 class="text-sm font-extrabold text-slate-900 mb-3">5B. + Add User Category</h2>
+        <form id="add-segment-form" class="space-y-2.5">
+          <input id="new-seg-name" type="text" required placeholder="e.g., Surveyor / Partner"
+            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm" />
+          <div id="segments-pill-list" class="flex flex-wrap gap-1.5 pt-1"></div>
+          <button type="submit"
+            class="w-full rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2">
+            Add Category
+          </button>
+        </form>
       </section>
 
-      <!-- Update Global Internal Notice -->
       <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
-        <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-1">5C. Update Global Notice</h2>
-        <p class="text-xs text-slate-500 mb-3">Displayed on Login &amp; Dashboard header.</p>
+        <h2 class="text-sm font-extrabold text-slate-900 mb-3">5C. Update Public Notice</h2>
         <div class="space-y-2.5">
-          <input id="admin-notice-title" type="text" placeholder="Notice Heading"
-            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm font-bold" />
-          <textarea id="admin-notice-box" rows="3" placeholder="Notice message..."
-            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs sm:text-sm"></textarea>
+          <textarea id="admin-notice-box" rows="3"
+            class="w-full rounded-xl border border-sky-200 bg-sky-50/40 px-3 py-2 text-xs"></textarea>
           <button type="button" onclick="updateNotice()"
-            class="w-full rounded-xl bg-[#d97706] hover:bg-amber-700 text-white text-xs sm:text-sm font-bold py-2">
-            Publish Global Notice
+            class="w-full rounded-xl bg-[#d97706] hover:bg-amber-700 text-white text-xs font-bold py-2">
+            Save Public Notice
           </button>
         </div>
       </section>
     </div>
 
-    <!-- 6. Master Login Logs -->
+    <!-- 6. Login & GPS Audit Logs Table -->
     <section class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
-      <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">6. Master Login Audit Logs</h2>
-      <div class="overflow-x-auto border border-sky-100 rounded-xl max-h-80">
+      <h2 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">6. Login &amp; Exact GPS Location Logs</h2>
+      <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs sm:text-sm">
-          <thead class="bg-sky-50 border-b border-sky-200 sticky top-0">
+          <thead class="bg-sky-50 border-b border-sky-200">
             <tr>
-              <th class="py-2.5 px-3 font-extrabold">Timestamp</th>
-              <th class="py-2.5 px-3 font-extrabold">User</th>
-              <th class="py-2.5 px-3 font-extrabold">Mobile</th>
-              <th class="py-2.5 px-3 font-extrabold">Segment</th>
-              <th class="py-2.5 px-3 font-extrabold">Status / Details</th>
+              <th class="py-2.5 px-3">Time</th>
+              <th class="py-2.5 px-3">User</th>
+              <th class="py-2.5 px-3">Category</th>
+              <th class="py-2.5 px-3">Type</th>
+              <th class="py-2.5 px-3">Coordinates (Accuracy)</th>
+              <th class="py-2.5 px-3">Map</th>
             </tr>
           </thead>
           <tbody id="logs-body" class="divide-y divide-sky-100"></tbody>
         </table>
       </div>
     </section>
-
   </main>
 
-  <!-- ==================== PERMANENT CROSS-DEVICE ID / PASS MODAL ==================== -->
-  <div id="cred-modal" class="hidden fixed inset-0 z-50 bg-slate-900/55 flex items-center justify-center p-4">
-    <div class="bg-white border border-sky-200 rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-sky-100 pb-3">
-        <div>
-          <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-950 border border-amber-300">Cross-Device Credential Locker</span>
-          <h3 id="cred-modal-title" class="text-sm sm:text-base font-extrabold text-slate-900 mt-1">Portal ID / Password</h3>
-        </div>
-        <button type="button" onclick="closeCredModal()" class="text-xs font-bold text-slate-500 hover:text-slate-900 px-2 py-1 rounded-lg bg-slate-100">✕</button>
+  <!-- ==================== ID / PASS MODAL ==================== -->
+  <div id="cred-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
+    <div class="bg-white border border-sky-200 rounded-2xl w-full max-w-md p-5 shadow-xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="cred-modal-title" class="text-sm sm:text-base font-extrabold text-slate-900">Portal ID / Pass</h3>
+        <button type="button" onclick="closeCredModal()" class="text-xs font-bold text-slate-500 hover:text-slate-900">✕ Close</button>
       </div>
-
-      <p id="cred-source-note" class="text-xs text-slate-700 bg-sky-50 border border-sky-200 rounded-xl p-2.5 leading-relaxed"></p>
-
+      <p id="cred-source-note" class="text-xs text-slate-700 bg-sky-50 border border-sky-200 rounded-xl p-2.5"></p>
       <div class="space-y-3">
         <div>
-          <label for="cred-id-input" class="block text-xs font-bold text-slate-700 mb-1">Portal Login ID / Username</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Portal Login ID / Username</label>
           <div class="flex gap-2">
-            <input id="cred-id-input" type="text" placeholder="Enter portal User ID"
-              class="flex-1 rounded-xl border border-sky-200 bg-sky-50/30 px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900" />
-            <button type="button" onclick="copyField('cred-id-input', 'Portal ID')"
-              class="rounded-xl bg-sky-100 hover:bg-sky-200 text-slate-900 px-3 py-2 text-xs font-extrabold">
-              Copy
-            </button>
+            <input id="cred-id-input" type="text" class="flex-1 rounded-xl border border-sky-200 px-3 py-2 text-xs sm:text-sm font-semibold" />
+            <button type="button" onclick="copyText('cred-id-input', 'ID')" class="rounded-xl bg-sky-100 hover:bg-sky-200 px-3 py-2 text-xs font-bold">Copy</button>
           </div>
         </div>
-
         <div>
-          <label for="cred-pass-input" class="block text-xs font-bold text-slate-700 mb-1">Portal Password</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Portal Password</label>
           <div class="flex gap-2">
-            <input id="cred-pass-input" type="text" placeholder="Enter portal Password"
-              class="flex-1 rounded-xl border border-sky-200 bg-sky-50/30 px-3 py-2 text-xs sm:text-sm font-mono font-bold text-slate-900" />
-            <button type="button" onclick="copyField('cred-pass-input', 'Portal Password')"
-              class="rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 px-3 py-2 text-xs font-extrabold">
-              Copy
-            </button>
+            <input id="cred-pass-input" type="text" class="flex-1 rounded-xl border border-sky-200 px-3 py-2 text-xs sm:text-sm font-mono font-bold" />
+            <button type="button" onclick="copyText('cred-pass-input', 'Password')" class="rounded-xl bg-amber-100 hover:bg-amber-200 px-3 py-2 text-xs font-bold">Copy</button>
           </div>
         </div>
       </div>
-
-      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-sky-100">
-        <button type="button" onclick="closeCredModal()"
-          class="rounded-xl border border-slate-200 hover:bg-slate-50 px-4 py-2 text-xs font-bold text-slate-700">
-          Close
-        </button>
-        <button id="save-cred-btn" type="button" onclick="savePortalCredToSheet()"
-          class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white px-4 py-2 text-xs font-extrabold shadow-xs">
-          💾 Save Permanently to Sheet
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeCredModal()" class="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold">Cancel</button>
+        <button id="btn-save-cred" type="button" onclick="savePortalCred()" class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white px-4 py-2 text-xs font-bold">
+          Save Permanently
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== JAVASCRIPT CONTROLLER ==================== -->
+  <!-- ==================== PERSONAL NOTICES & INTER-OFFICE MESSENGER MODAL ==================== -->
+  <div id="msg-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
+    <div class="bg-white border border-sky-200 rounded-2xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-xl overflow-hidden">
+      <div class="bg-sky-50 border-b border-sky-200 px-5 py-3.5 flex items-center justify-between">
+        <div>
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900">💬 Personal Notices &amp; Inter-Office Messages</h3>
+          <p class="text-[11px] text-slate-600">Saved permanently in Google Sheet</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="refreshMessages()" class="rounded-lg bg-white border border-sky-200 px-2.5 py-1 text-xs font-bold">↻ Refresh</button>
+          <button type="button" onclick="closeMessagesModal()" class="text-xs font-extrabold text-slate-600 hover:text-slate-900 px-2 py-1">✕ Close</button>
+        </div>
+      </div>
+
+      <!-- Messages List -->
+      <div id="messages-feed" class="flex-1 overflow-y-auto p-4 space-y-2.5 bg-sky-50/30"></div>
+
+      <!-- Quick Reply / Send Message Bar -->
+      <form id="modal-msg-form" class="border-t border-sky-200 p-3 bg-white flex flex-wrap gap-2">
+        <select id="modal-msg-target" class="rounded-xl border border-sky-200 bg-sky-50 px-2.5 py-2 text-xs font-bold">
+          <option value="ALL|ALL|All Team">To: All Team</option>
+        </select>
+        <input id="modal-msg-input" type="text" required placeholder="Write message or reply..."
+          class="flex-1 min-w-[180px] rounded-xl border border-sky-200 px-3 py-2 text-xs sm:text-sm" />
+        <button type="submit" class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs font-extrabold px-4 py-2">
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
     // =========================================================================
-    // 1. LIVE GOOGLE APPS SCRIPT BACKEND URL
+    // 1. MASTER BACKEND URL CONFIG
     // =========================================================================
     const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbyVGjEekOUrlRIa6apnrGtVM5KRcOrYw3C1kdOeax-EffqGv0GcxtCilUTLp_rl0N3rxQ/exec";
 
     // =========================================================================
-    // 2. APPLICATION STATE (ZERO HARDCODED DEMO USERS)
+    // 2. CLEAN STATE (ZERO DEMO USERS)
     // =========================================================================
-    const SESSION_STORAGE_KEY = "umbrella_master_session_v2";
-    const DEFAULT_SEGMENTS_LIST = ["Admin", "Operator", "Associate", "Field Team", "Hospital Staff", "User"];
+    const STORE_KEY = "umbrella_master_clean_v3";
 
-    const state = {
-      notice: {
-        title: "Welcome to Umbrella Master Portal",
-        message: "Sign in with your registered mobile number to access your permitted portals.",
-        updatedAt: "",
-        updatedBy: ""
-      },
-      segments: [...DEFAULT_SEGMENTS_LIST],
-      portals: [],
+    const DEFAULT_STATE = {
+      notice: "Welcome to Umbrella Master Portal. Location (GPS) access is required to sign in.",
+      portals: [
+        { id: "P1", name: "UMBRELLA CALENDAR", category: "Operations", url: "https://umbrellaind.github.io/associateplancalendar/" },
+        { id: "P2", name: "UDCP PORTAL", category: "ONBOARDING NEW HOSPITAL", url: "https://umbrellaind.github.io/nccloserportal/" },
+        { id: "P3", name: "KPI COLLECTION PORTAL", category: "Quality & Compliance", url: "https://umbrellaind.github.io/kpicollection/" },
+        { id: "P4", name: "Policy & SOP Portal", category: "Documentation", url: "https://umbrellaind.github.io/policyportal/" }
+      ],
+      segments: ["Admin", "Operator", "Associate", "Field Team", "Hospital Staff", "User"],
       users: [],
-      activeUsers: [],
       pending: [],
       logs: [],
       messages: [],
-      currentUser: null
+      sessionMobile: ""
     };
-
-    let activeCredPortalId = null;
-    let activeIframePortalId = null;
-    let messagePollTimer = null;
 
     const NEWS_ITEMS = {
       accred: [
-        { tag: "NABH", title: "NABH 5th Edition & Pre-Assessment Readiness", detail: "Verify clinical KPIs, fire NOC, calibration logs, and biomedical waste records prior to assessment." },
-        { tag: "NABL", title: "ISO 15189 Medical Lab Quality & EQAS", detail: "Maintain daily internal QC charts, pipette calibration, and EQAS outlier root-cause analysis." },
-        { tag: "JCI", title: "JCI International Patient Safety Goals (IPSG)", detail: "Ensure two-identifier patient verification and high-alert medication double-check protocols." },
-        { tag: "ACHS", title: "ACHS Clinical Governance & Incident Reporting", detail: "Review departmental clinical indicators and close patient feedback actions within timelines." }
+        { tag: "NABH", title: "NABH 5th Edition & Pre-Assessment Checklist", detail: "Verify clinical KPIs, fire NOC, and biomedical waste records before assessment." },
+        { tag: "NABL", title: "ISO 15189 Lab Quality Control & EQAS", detail: "Keep internal QC charts, instrument calibration, and EQAS corrective actions updated." },
+        { tag: "JCI", title: "JCI Patient Safety & High-Alert Medication", detail: "Ensure two-identifier checks and safe medication labeling across wards." },
+        { tag: "ACHS", title: "ACHS Clinical Governance & Patient Feedback", detail: "Review departmental audits and close patient feedback loops regularly." }
       ],
       aam: [
-        { tag: "FSSAI", title: "Nutrition Labels, Salt & Sugar Moderation", detail: "Read packaged food labels carefully and limit daily added salt, sugar, and trans fats." },
-        { tag: "Ayushman", title: "Ayushman Bharat PM-JAY & Vay Vandana Cover", detail: "Eligible families and 70+ senior citizens can avail cashless treatment at empaneled hospitals." },
-        { tag: "MoHFW", title: "Preventive Health & Seasonal Care Advisory", detail: "Stay hydrated, follow routine immunization schedules, and avoid unprescribed antibiotics." }
+        { tag: "FSSAI", title: "Packaged Food Labels, Salt & Sugar Awareness", detail: "Check nutrition labels and keep daily salt/sugar intake moderate for family health." },
+        { tag: "Ayushman", title: "Ayushman Bharat & Senior Citizen Health Cover", detail: "Eligible families and 70+ senior citizens can check empaneled hospital benefits." },
+        { tag: "MoHFW", title: "Seasonal & Preventive Care Advisory", detail: "Stay hydrated, follow vaccination/hygiene norms, and avoid self-medication." }
       ]
     };
 
-    // =========================================================================
-    // 3. UI HELPERS (TOAST, LOADER, ESCAPE HTML, CLIPBOARD)
-    // =========================================================================
-    function esc(str) {
-      return String(str === null || str === undefined ? "" : str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+    let db = loadDb();
+    let currentUser = null;
+    let activePortalId = null;      // Which portal chip currently has its inline iframe open
+    let activeCredPortalId = null;
+    let lastGps = null;
+
+    function loadDb() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (raw) return { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...JSON.parse(raw) };
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_STATE));
     }
 
-    function showToast(text, isError = false) {
+    function saveDb() {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(db)); } catch (e) {}
+    }
+
+    function showToast(text) {
       const el = document.getElementById("toast");
       el.textContent = text;
-      el.className = `fixed bottom-4 right-4 z-50 text-xs sm:text-sm font-semibold px-4 py-3 rounded-xl shadow-xl border max-w-sm ${
-        isError
-          ? "bg-red-900 text-white border-red-700"
-          : "bg-slate-900 text-white border-slate-700"
-      }`;
       el.classList.remove("hidden");
-      clearTimeout(showToast._timer);
-      showToast._timer = setTimeout(() => el.classList.add("hidden"), 3400);
-    }
-
-    function setLoader(visible, text = "Syncing with Umbrella Master Database...") {
-      const el = document.getElementById("global-loader");
-      document.getElementById("loader-text").textContent = text;
-      el.classList.toggle("hidden", !visible);
-    }
-
-    function copyPlainText(value, label) {
-      const tmp = document.createElement("textarea");
-      tmp.value = value || "";
-      document.body.appendChild(tmp);
-      tmp.select();
-      document.execCommand("copy");
-      document.body.removeChild(tmp);
-      showToast(`${label} copied to clipboard.`);
-    }
-
-    function copyField(inputId, label) {
-      const el = document.getElementById(inputId);
-      if (!el || !el.value) {
-        showToast(`Nothing to copy in ${label}.`, true);
-        return;
-      }
-      el.select();
-      document.execCommand("copy");
-      showToast(`${label} copied to clipboard.`);
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => el.classList.add("hidden"), 3000);
     }
 
     // =========================================================================
-    // 4. BACKEND API CLIENT (GOOGLE APPS SCRIPT)
+    // 3. MANDATORY HIGH-ACCURACY GPS LOCATION CAPTURE
+    // =========================================================================
+    function getMandatoryGps() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject("Aapka browser GPS Location support nahi karta.");
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            resolve({
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+              accuracy: pos.coords.accuracy
+            });
+          },
+          (err) => {
+            if (err.code === 1) {
+              reject("Location access deny kiya gaya hai. Personalized items dikhane ke liye browser/phone ki Location (GPS) Allow karke dobara Sign In karein.");
+            } else if (err.code === 2) {
+              reject("GPS signal nahi mil raha. Phone/device ki Location ON karke dobara try karein.");
+            } else {
+              reject("Location verify hone mein timeout hua. GPS ON karke dobara try karein.");
+            }
+          },
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+        );
+      });
+    }
+
+    // =========================================================================
+    // 4. API HELPERS
     // =========================================================================
     async function apiGet(params = {}) {
       const qs = new URLSearchParams(params).toString();
-      const res = await fetch(`${MASTER_API_URL}?${qs}`, { method: "GET" });
+      const res = await fetch(`${MASTER_API_URL}?${qs}`);
       return await res.json();
     }
 
@@ -802,425 +580,353 @@
     }
 
     // =========================================================================
-    // 5. BOOTSTRAP & SESSION RESTORE
+    // 5. INSTANT BOOT (0-SECOND LOGIN SCREEN) + BACKGROUND SYNC
     // =========================================================================
-    window.addEventListener("DOMContentLoaded", async () => {
+    window.addEventListener("DOMContentLoaded", () => {
+      renderNotices();
+      renderSegmentSelects();
       setNewsTab("accred");
-      populateSegmentDropdowns();
 
-      setLoader(true, "Connecting to Umbrella Master Sheet...");
-      try {
-        const initRes = await apiGet({ action: "init" });
-        if (initRes && initRes.status === "success") {
-          applyInitPayload(initRes);
-        } else {
-          showToast((initRes && initRes.message) || "Unable to load initial data.", true);
+      // Background lightweight init sync (does not block UI)
+      apiGet({ action: "init" }).then(remote => {
+        if (remote && remote.ok) {
+          if (remote.notice) db.notice = remote.notice;
+          if (Array.isArray(remote.portals) && remote.portals.length) db.portals = remote.portals;
+          if (Array.isArray(remote.segments) && remote.segments.length) db.segments = remote.segments;
+          saveDb();
+          renderNotices();
+          renderSegmentSelects();
         }
-      } catch (err) {
-        showToast("Network error while reaching Google Apps Script.", true);
-      } finally {
-        setLoader(false);
-      }
+      }).catch(() => {});
 
-      // Check saved device session
-      const savedSession = getSavedSession();
-      if (savedSession && savedSession.mobile && savedSession.password) {
-        await performLogin(savedSession.mobile, savedSession.password, true, true);
+      // Remembered session auto-login (also enforces mandatory GPS)
+      if (db.sessionMobile) {
+        attemptLogin(db.sessionMobile, "", "Auto-Login", true);
       } else {
         showPage("login");
       }
     });
 
-    function applyInitPayload(data) {
-      if (data.notice) state.notice = data.notice;
-      if (Array.isArray(data.segments) && data.segments.length) state.segments = data.segments;
-      if (Array.isArray(data.portals)) state.portals = data.portals;
-      if (Array.isArray(data.users)) state.users = data.users;
-      if (Array.isArray(data.activeUsers)) state.activeUsers = data.activeUsers;
-      if (Array.isArray(data.pending)) state.pending = data.pending;
-      if (Array.isArray(data.logs)) state.logs = data.logs;
-
-      renderNoticeDisplays();
-      populateSegmentDropdowns();
+    function showPage(page) {
+      document.getElementById("page-login").classList.toggle("hidden", page !== "login");
+      document.getElementById("page-portals").classList.toggle("hidden", page !== "portals");
+      document.getElementById("page-admin").classList.toggle("hidden", page !== "admin");
+      document.getElementById("header-user-controls").classList.toggle("hidden", page === "login");
     }
 
-    function getSavedSession() {
-      try {
-        const raw = localStorage.getItem(SESSION_STORAGE_KEY);
-        return raw ? JSON.parse(raw) : null;
-      } catch (e) {
-        return null;
-      }
+    function renderNotices() {
+      document.getElementById("login-notice-text").textContent = db.notice;
+      document.getElementById("dash-notice-text").textContent = db.notice;
+      const box = document.getElementById("admin-notice-box");
+      if (box) box.value = db.notice;
     }
 
-    function saveSession(mobile, password) {
-      try {
-        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ mobile, password }));
-      } catch (e) {}
-    }
+    function renderSegmentSelects() {
+      const opts = db.segments.map(s => `<option value="${s}">${s}</option>`).join("");
+      const suRole = document.getElementById("su-role");
+      if (suRole) suRole.innerHTML = opts;
+      const auRole = document.getElementById("au-role");
+      if (auRole) auRole.innerHTML = opts;
 
-    function clearSession() {
-      try {
-        localStorage.removeItem(SESSION_STORAGE_KEY);
-      } catch (e) {}
-    }
-
-    function showPage(pageName) {
-      document.getElementById("page-login").classList.toggle("hidden", pageName !== "login");
-      document.getElementById("page-portals").classList.toggle("hidden", pageName !== "portals");
-      document.getElementById("page-admin").classList.toggle("hidden", pageName !== "admin");
-      document.getElementById("header-user-controls").classList.toggle("hidden", pageName === "login");
-    }
-
-    function renderNoticeDisplays() {
-      const title = state.notice.title || "Internal Notice";
-      const message = state.notice.message || "";
-      const meta = state.notice.updatedAt ? `Updated: ${state.notice.updatedAt}` : "";
-
-      document.getElementById("login-notice-title").textContent = title;
-      document.getElementById("login-notice-text").textContent = message;
-      document.getElementById("login-notice-meta").textContent = meta;
-
-      document.getElementById("dash-notice-text").textContent = `${title}: ${message}`;
-      document.getElementById("admin-notice-title").value = title;
-      document.getElementById("admin-notice-box").value = message;
-    }
-
-    function populateSegmentDropdowns() {
-      const segOptionsHtml = state.segments
-        .map(s => `<option value="${esc(s)}">${esc(s)}</option>`)
-        .join("");
-
-      const suSeg = document.getElementById("su-segment");
-      if (suSeg) suSeg.innerHTML = segOptionsHtml;
-
-      const auSeg = document.getElementById("au-segment");
-      if (auSeg) auSeg.innerHTML = segOptionsHtml;
-
-      const filterSeg = document.getElementById("matrix-segment-filter");
-      if (filterSeg) {
-        const prev = filterSeg.value || "ALL";
-        filterSeg.innerHTML = `<option value="ALL">All Segments</option>` + segOptionsHtml;
-        filterSeg.value = state.segments.includes(prev) ? prev : "ALL";
+      const filter = document.getElementById("matrix-segment-filter");
+      if (filter) {
+        const cur = filter.value || "ALL";
+        filter.innerHTML = `<option value="ALL">All Categories</option>` + opts;
+        filter.value = cur;
       }
 
-      const badgesWrap = document.getElementById("admin-segments-badges");
-      if (badgesWrap) {
-        badgesWrap.innerHTML = state.segments
-          .map(s => `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-slate-800">${esc(s)}</span>`)
-          .join("");
+      const pillBox = document.getElementById("segments-pill-list");
+      if (pillBox) {
+        pillBox.innerHTML = db.segments.map(s =>
+          `<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-slate-800">${s}</span>`
+        ).join("");
       }
     }
 
     // =========================================================================
-    // 6. PAGE 1: LOGIN, SIGN-UP & DUAL NEWS FEED
+    // 6. AUTHENTICATION (SIGN IN & SIGN UP)
     // =========================================================================
     function setAuthTab(mode) {
       const isIn = mode === "signin";
       document.getElementById("signin-form").classList.toggle("hidden", !isIn);
       document.getElementById("signup-form").classList.toggle("hidden", isIn);
-
       document.getElementById("tab-signin").className = isIn
-        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white transition"
-        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white transition";
-
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
       document.getElementById("tab-signup").className = !isIn
-        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white transition"
-        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white transition";
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
     }
 
-    document.getElementById("signin-form").addEventListener("submit", async (e) => {
+    async function attemptLogin(mobile, password, loginType, remember) {
+      const msg = document.getElementById("login-msg");
+      const btn = document.getElementById("btn-signin-submit");
+      if (btn) { btn.disabled = true; btn.textContent = "Verifying GPS Location..."; }
+
+      let gps;
+      try {
+        gps = await getMandatoryGps();
+        lastGps = gps;
+      } catch (gpsErr) {
+        if (btn) { btn.disabled = false; btn.textContent = "Allow GPS & Sign In"; }
+        showPage("login");
+        msg.textContent = gpsErr;
+        msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+        msg.classList.remove("hidden");
+        return;
+      }
+
+      if (btn) btn.textContent = "Signing In...";
+
+      try {
+        const res = await apiPost({ action: "login", mobile, password, loginType, gps });
+        if (btn) { btn.disabled = false; btn.textContent = "Allow GPS & Sign In"; }
+
+        if (!res || !res.ok) {
+          db.sessionMobile = "";
+          saveDb();
+          showPage("login");
+          msg.textContent = (res && res.message) ? res.message : "Login failed.";
+          msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+          msg.classList.remove("hidden");
+          return;
+        }
+
+        msg.classList.add("hidden");
+        if (Array.isArray(res.portals) && res.portals.length) db.portals = res.portals;
+        if (Array.isArray(res.segments) && res.segments.length) db.segments = res.segments;
+        if (res.notice) db.notice = res.notice;
+        if (Array.isArray(res.messages)) db.messages = res.messages;
+        if (Array.isArray(res.allUsers)) db.users = res.allUsers;
+        if (Array.isArray(res.pendingUsers)) db.pending = res.pendingUsers;
+        if (Array.isArray(res.logs)) db.logs = res.logs;
+
+        if (remember) db.sessionMobile = res.user.mobile;
+        saveDb();
+
+        loginSuccess(res.user);
+      } catch (err) {
+        if (btn) { btn.disabled = false; btn.textContent = "Allow GPS & Sign In"; }
+        showPage("login");
+        msg.textContent = "Network error while connecting to Master Sheet. Please try again.";
+        msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+        msg.classList.remove("hidden");
+      }
+    }
+
+    document.getElementById("signin-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const mobile = document.getElementById("login-mobile").value.trim();
       const password = document.getElementById("login-password").value.trim();
       const remember = document.getElementById("login-remember").checked;
-      await performLogin(mobile, password, remember, false);
+      attemptLogin(mobile, password, "Login", remember);
     });
-
-    async function performLogin(mobile, password, remember, isSilentAuto) {
-      const msgBox = document.getElementById("login-msg");
-      if (!isSilentAuto) {
-        msgBox.classList.add("hidden");
-        setLoader(true, "Authenticating with Master Sheet...");
-      }
-
-      try {
-        const res = await apiPost({ action: "login", mobile, password });
-        if (!res || res.status !== "success") {
-          if (isSilentAuto) {
-            clearSession();
-            showPage("login");
-          } else {
-            msgBox.textContent = (res && res.message) || "Invalid mobile number or password.";
-            msgBox.className = "text-xs font-semibold rounded-xl px-3 py-2.5 bg-red-50 text-red-900 border border-red-200";
-            msgBox.classList.remove("hidden");
-          }
-          return;
-        }
-
-        // Apply returned live session data
-        state.currentUser = res.user;
-        if (Array.isArray(res.portals)) state.portals = res.portals;
-        if (Array.isArray(res.segments)) state.segments = res.segments;
-        if (res.notice) state.notice = res.notice;
-        if (Array.isArray(res.messages)) state.messages = res.messages;
-
-        if (remember) {
-          saveSession(mobile, password);
-        } else {
-          clearSession();
-        }
-
-        enterPortalWorkspace();
-        if (!isSilentAuto) {
-          showToast(`Welcome, ${state.currentUser.fullName}!`);
-        }
-      } catch (err) {
-        if (!isSilentAuto) {
-          msgBox.textContent = "Connection error while logging in. Please check internet and retry.";
-          msgBox.className = "text-xs font-semibold rounded-xl px-3 py-2.5 bg-red-50 text-red-900 border border-red-200";
-          msgBox.classList.remove("hidden");
-        } else {
-          showPage("login");
-        }
-      } finally {
-        if (!isSilentAuto) setLoader(false);
-      }
-    }
 
     document.getElementById("signup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const msgBox = document.getElementById("signup-msg");
-      msgBox.classList.add("hidden");
+      const mobile = document.getElementById("su-mobile").value.trim();
+      const name = document.getElementById("su-name").value.trim();
+      const hospital = document.getElementById("su-hospital").value.trim();
+      const role = document.getElementById("su-role").value;
+      const password = document.getElementById("su-password").value.trim();
+      const msg = document.getElementById("signup-msg");
 
-      const payload = {
-        action: "signup",
-        mobile: document.getElementById("su-mobile").value.trim(),
-        fullName: document.getElementById("su-name").value.trim(),
-        hospitalName: document.getElementById("su-hospital").value.trim(),
-        role: document.getElementById("su-segment").value,
-        password: document.getElementById("su-password").value.trim()
-      };
-
-      setLoader(true, "Submitting access request...");
       try {
-        const res = await apiPost(payload);
-        if (res && res.status === "success") {
-          msgBox.textContent = res.message || "Request submitted as Pending. Admin approval required.";
-          msgBox.className = "text-xs font-semibold rounded-xl px-3 py-2.5 bg-emerald-50 text-emerald-950 border border-emerald-200";
-          msgBox.classList.remove("hidden");
+        const res = await apiPost({ action: "signup", mobile, name, hospital, role, password });
+        if (res && res.ok) {
+          msg.textContent = "Request submitted as Pending. Admin approval required.";
+          msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-emerald-50 text-emerald-900 border border-emerald-200";
+          msg.classList.remove("hidden");
           e.target.reset();
         } else {
-          msgBox.textContent = (res && res.message) || "Sign-up failed.";
-          msgBox.className = "text-xs font-semibold rounded-xl px-3 py-2.5 bg-red-50 text-red-900 border border-red-200";
-          msgBox.classList.remove("hidden");
+          msg.textContent = (res && res.message) || "Could not submit request.";
+          msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+          msg.classList.remove("hidden");
         }
       } catch (err) {
-        msgBox.textContent = "Network error submitting request.";
-        msgBox.className = "text-xs font-semibold rounded-xl px-3 py-2.5 bg-red-50 text-red-900 border border-red-200";
-        msgBox.classList.remove("hidden");
-      } finally {
-        setLoader(false);
+        msg.textContent = "Server connection failed. Please retry.";
+        msg.className = "text-xs font-semibold rounded-xl px-3 py-2 bg-red-50 text-red-800 border border-red-200";
+        msg.classList.remove("hidden");
       }
     });
 
     function setNewsTab(tab) {
       const isAcc = tab === "accred";
       document.getElementById("news-tab-accred").className = isAcc
-        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white transition"
-        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white transition";
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
       document.getElementById("news-tab-aam").className = !isAcc
-        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white transition"
-        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white transition";
+        ? "py-2 rounded-lg text-xs sm:text-sm font-bold bg-[#b91c1c] text-white"
+        : "py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-700 hover:bg-white";
 
       const items = isAcc ? NEWS_ITEMS.accred : NEWS_ITEMS.aam;
       document.getElementById("news-list").innerHTML = items.map(n => `
-        <div class="p-3.5 rounded-xl bg-sky-50/70 border border-sky-100">
-          <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-950 border border-amber-300">${esc(n.tag)}</span>
-          <h3 class="text-xs sm:text-sm font-bold text-slate-900 mt-1.5">${esc(n.title)}</h3>
-          <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">${esc(n.detail)}</p>
+        <div class="p-3.5 rounded-xl bg-sky-50/60 border border-sky-100">
+          <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-950 border border-amber-300">${n.tag}</span>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 mt-1.5">${n.title}</h3>
+          <p class="text-xs text-slate-600 mt-0.5">${n.detail}</p>
         </div>
       `).join("");
     }
 
     // =========================================================================
-    // 7. PAGE 2: MY PORTALS, CREDENTIAL LOCKER & MESSENGER
+    // 7. MY PORTALS (WITH INLINE IFRAME DIRECTLY BELOW EACH PORTAL CHIP)
     // =========================================================================
-    function enterPortalWorkspace() {
-      const u = state.currentUser;
-      if (!u) return;
-
-      document.getElementById("header-user-name").textContent = u.fullName;
-      document.getElementById("header-user-segment").textContent = u.role || u.segment || "User";
-      document.getElementById("header-user-mobile").textContent = u.mobile;
-      document.getElementById("btn-admin-panel").classList.toggle("hidden", !u.isAdmin);
-
-      renderNoticeDisplays();
-      renderPermittedPortals();
-      populateUserMessageRecipients();
-      renderUserMessages();
+    function loginSuccess(user) {
+      currentUser = user;
+      activePortalId = null;
+      document.getElementById("header-user-label").textContent = `${user.name} (${user.mobile})`;
+      document.getElementById("user-role-badge").textContent = user.role || "User";
+      document.getElementById("btn-admin-panel").classList.toggle("hidden", !user.isAdmin);
+      if (lastGps) {
+        document.getElementById("gps-verified-badge").textContent = `📍 ${lastGps.lat.toFixed(4)}, ${lastGps.lng.toFixed(4)}`;
+      }
+      renderNotices();
+      renderPersonalBanner();
+      renderPortals();
       showPage("portals");
-
-      // Poll messages quietly every 20 seconds while logged in
-      clearInterval(messagePollTimer);
-      messagePollTimer = setInterval(() => {
-        if (state.currentUser) loadMessagesFromServer(false);
-      }, 20000);
     }
 
     function logout() {
-      clearInterval(messagePollTimer);
-      state.currentUser = null;
-      state.messages = [];
-      clearSession();
-      closeIframe();
-      document.getElementById("messages-drawer").classList.add("hidden");
-      document.getElementById("login-password").value = "";
+      currentUser = null;
+      activePortalId = null;
+      db.sessionMobile = "";
+      saveDb();
       showPage("login");
-      showToast("Logged out safely.");
     }
 
-    async function refreshWorkspaceData() {
-      if (!state.currentUser) return;
-      setLoader(true, "Refreshing portals & messages...");
-      try {
-        const initRes = await apiGet({ action: "init" });
-        if (initRes && initRes.status === "success") {
-          applyInitPayload(initRes);
-          const freshMe = state.users.find(x => x.userId === state.currentUser.userId || x.mobile === state.currentUser.mobile);
-          if (freshMe) {
-            // Convert access map to array of allowed portalIds
-            const accessArr = state.portals
-              .filter(p => freshMe.access && freshMe.access[p.portalId] === true)
-              .map(p => p.portalId);
-            state.currentUser = {
-              ...state.currentUser,
-              ...freshMe,
-              access: accessArr
-            };
-          }
-        }
-        await loadMessagesFromServer(false);
-        renderPermittedPortals();
-        populateUserMessageRecipients();
-        showToast("Synced latest data from Google Sheet.");
-      } catch (e) {
-        showToast("Failed to sync data.", true);
-      } finally {
-        setLoader(false);
-      }
+    function backToMyPortals() {
+      renderPersonalBanner();
+      renderPortals();
+      showPage("portals");
     }
 
-    function renderPermittedPortals() {
-      const u = state.currentUser;
-      if (!u) return;
+    function getPortalCred(portalId) {
+      if (!currentUser || !currentUser.portalCreds) return { id: "", pass: "", source: "" };
+      return currentUser.portalCreds[portalId] || { id: "", pass: "", source: "" };
+    }
 
-      const allowedIds = Array.isArray(u.access) ? u.access : [];
-      const permittedPortals = state.portals.filter(p => allowedIds.includes(p.portalId));
-
-      document.getElementById("portal-count-badge").textContent = `${permittedPortals.length} Portal${permittedPortals.length === 1 ? "" : "s"}`;
+    function renderPortals() {
+      if (!currentUser) return;
+      const allowed = db.portals.filter(p =>
+        currentUser.isAdmin || (Array.isArray(currentUser.access) && currentUser.access.includes(p.id))
+      );
+      document.getElementById("portal-count-badge").textContent = `${allowed.length} Portals`;
 
       const grid = document.getElementById("portals-grid");
-      if (!permittedPortals.length) {
-        grid.innerHTML = `
-          <div class="col-span-full bg-white border border-sky-200 rounded-2xl p-8 text-center space-y-2">
-            <p class="text-sm font-extrabold text-slate-900">No portals assigned to your account yet.</p>
-            <p class="text-xs text-slate-600">Please contact the Administrator to enable portal access in the Access Matrix.</p>
-          </div>`;
+      if (!allowed.length) {
+        grid.innerHTML = `<div class="col-span-full bg-white border border-sky-200 rounded-2xl p-6 text-center text-sm text-slate-600">No portals assigned yet for your account.</div>`;
         return;
       }
 
-      grid.innerHTML = permittedPortals.map(p => {
-        const cred = (u.portalCreds && u.portalCreds[p.portalId]) || { userId: "", password: "" };
-        const hasCred = Boolean(cred.userId || cred.password);
-
+      grid.innerHTML = allowed.map(p => {
+        const c = getPortalCred(p.id);
+        const isOpen = activePortalId === p.id;
         return `
-          <div class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between gap-4 hover:border-sky-300 transition">
+          <div class="bg-white border ${isOpen ? 'border-[#b91c1c] ring-2 ring-red-100' : 'border-sky-200'} rounded-2xl p-5 shadow-xs flex flex-col justify-between gap-3">
             <div>
               <div class="flex items-center justify-between gap-2">
-                <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-900 border border-sky-200">${esc(p.category || "Portal")}</span>
-                <span class="text-[11px] font-mono font-extrabold text-[#b91c1c] bg-red-50 px-2 py-0.5 rounded-md border border-red-100">${esc(p.portalId)}</span>
+                <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-900 border border-sky-200">${p.category || "Portal"}</span>
+                <span class="text-[11px] font-mono font-bold text-[#b91c1c]">${p.id}</span>
               </div>
-              <h2 class="text-base sm:text-lg font-extrabold text-slate-900 mt-2.5">${esc(p.portalName)}</h2>
-              ${p.description ? `<p class="text-xs text-slate-600 mt-1">${esc(p.description)}</p>` : ""}
-              <p class="text-[11px] font-mono text-slate-500 truncate mt-1.5">${esc(p.portalUrl)}</p>
-
-              <!-- Quick Saved Credential Preview Strip -->
-              <div class="mt-3 p-2.5 rounded-xl bg-sky-50/80 border border-sky-100 flex flex-wrap items-center justify-between gap-2 text-xs">
-                ${hasCred ? `
-                  <div class="space-y-0.5">
-                    <div><span class="text-slate-500 font-semibold">ID:</span> <span class="font-bold text-slate-900">${esc(cred.userId || "—")}</span></div>
-                    <div><span class="text-slate-500 font-semibold">Pass:</span> <span class="font-mono font-bold text-slate-900">${esc(cred.password || "—")}</span></div>
-                  </div>
-                  <div class="flex items-center gap-1.5">
-                    ${cred.userId ? `<button type="button" onclick="copyPlainText('${esc(cred.userId)}', 'Portal ID')" class="px-2.5 py-1 rounded-lg bg-white border border-sky-200 hover:bg-sky-100 text-[11px] font-bold text-slate-800">Copy ID</button>` : ""}
-                    ${cred.password ? `<button type="button" onclick="copyPlainText('${esc(cred.password)}', 'Password')" class="px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-300 hover:bg-amber-200 text-[11px] font-extrabold text-amber-950">Copy Pass</button>` : ""}
-                  </div>
-                ` : `
-                  <span class="text-slate-500 italic">No saved ID/Password yet. Click 🔑 ID / Pass to store.</span>
-                `}
-              </div>
+              <h2 class="text-base font-extrabold text-slate-900 mt-2">${p.name}</h2>
+              <p class="text-xs font-mono text-slate-500 truncate mt-0.5">${p.url}</p>
+              ${(c.id || c.pass) ? `
+                <div class="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] bg-amber-50/80 border border-amber-200 rounded-xl px-2.5 py-1.5">
+                  <span>ID: <strong class="font-mono text-slate-900">${c.id || "—"}</strong></span>
+                  <span>•</span>
+                  <span>Pass: <strong class="font-mono text-[#b91c1c]">${c.pass || "—"}</strong></span>
+                  <button type="button" onclick="quickCopy('${c.pass || c.id}', '${c.pass ? 'Password' : 'ID'}')"
+                    class="ml-auto bg-white border border-amber-300 hover:bg-amber-100 px-2 py-0.5 rounded font-bold text-amber-950">
+                    Copy
+                  </button>
+                </div>
+              ` : ""}
             </div>
 
-            <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-sky-100">
-              <button type="button" onclick="openSameTab('${esc(p.portalId)}')"
-                class="rounded-xl bg-[#b91c1c] hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 transition">
-                Open (Same Tab)
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-sky-100">
+              <button type="button" onclick="toggleInlinePortal('${p.id}')"
+                class="rounded-xl ${isOpen ? 'bg-slate-900 text-white' : 'bg-[#b91c1c] hover:bg-red-800 text-white'} text-xs font-bold px-3.5 py-2">
+                ${isOpen ? 'Close Frame ✕' : 'Open Below Chip'}
               </button>
-              <a href="${esc(p.portalUrl)}" target="_blank" rel="noopener noreferrer"
-                class="rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-slate-900 text-xs font-bold px-3.5 py-2 transition">
+              <a href="${p.url}" target="_blank" rel="noopener noreferrer"
+                class="rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-slate-900 text-xs font-bold px-3.5 py-2">
                 New Tab ↗
               </a>
-              <button type="button" onclick="openCredModal('${esc(p.portalId)}')"
-                class="ml-auto rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 text-xs font-extrabold px-3 py-2 transition">
+              <button type="button" onclick="openCredModal('${p.id}')"
+                class="ml-auto rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 text-xs font-bold px-3 py-2">
                 🔑 ID / Pass
               </button>
             </div>
           </div>
+
+          ${isOpen ? `
+            <div id="inline-frame-${p.id}" class="col-span-full bg-white border-2 border-[#b91c1c] rounded-2xl overflow-hidden shadow-md">
+              <div class="bg-sky-50 border-b border-sky-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="toggleInlinePortal('${p.id}')"
+                    class="rounded-lg bg-white border border-sky-300 hover:bg-sky-100 px-3 py-1.5 text-xs font-extrabold text-slate-900">
+                    ✕ Close ${p.name}
+                  </button>
+                  <span class="text-xs sm:text-sm font-extrabold text-[#b91c1c]">${p.name} (${p.id})</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="refreshInlineFrame('${p.id}')"
+                    class="rounded-lg bg-white border border-sky-200 hover:bg-sky-100 px-3 py-1.5 text-xs font-bold text-slate-800">
+                    ↻ Refresh
+                  </button>
+                  <a href="${p.url}" target="_blank" rel="noopener noreferrer"
+                    class="rounded-lg bg-[#b91c1c] text-white px-3 py-1.5 text-xs font-bold">
+                    New Tab ↗
+                  </a>
+                </div>
+              </div>
+              <iframe id="iframe-el-${p.id}" src="${p.url}" class="w-full h-[74vh] bg-white border-0"></iframe>
+            </div>
+          ` : ""}
         `;
       }).join("");
     }
 
-    // In-App Iframe Controls
-    function openSameTab(portalId) {
-      const p = state.portals.find(x => x.portalId === portalId);
-      if (!p) return;
-      activeIframePortalId = portalId;
-      document.getElementById("iframe-title").textContent = `${p.portalName} (${p.portalId})`;
-      document.getElementById("iframe-external").href = p.portalUrl;
-      document.getElementById("portal-iframe").src = p.portalUrl;
-      document.getElementById("iframe-panel").classList.remove("hidden");
-      document.getElementById("iframe-panel").scrollIntoView({ behavior: "smooth" });
+    function toggleInlinePortal(portalId) {
+      activePortalId = (activePortalId === portalId) ? null : portalId;
+      renderPortals();
+      if (activePortalId) {
+        setTimeout(() => {
+          const box = document.getElementById(`inline-frame-${portalId}`);
+          if (box) box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 60);
+      }
     }
 
-    function refreshIframe() {
-      const frame = document.getElementById("portal-iframe");
-      if (frame.src) frame.src = frame.src;
-      showToast("Portal refreshed.");
+    function refreshInlineFrame(portalId) {
+      const el = document.getElementById(`iframe-el-${portalId}`);
+      if (el) {
+        el.src = el.src;
+        showToast("Portal refreshed.");
+      }
     }
 
-    function closeIframe() {
-      activeIframePortalId = null;
-      document.getElementById("portal-iframe").src = "";
-      document.getElementById("iframe-panel").classList.add("hidden");
+    function quickCopy(val, label) {
+      if (!val) return;
+      navigator.clipboard?.writeText(val).catch(() => {});
+      showToast(`${label} copied.`);
     }
 
     // =========================================================================
-    // 8. PERMANENT CROSS-DEVICE ID / PASS LOCKER MODAL
+    // 8. PERMANENT CROSS-DEVICE PORTAL ID / PASSWORD MODAL
     // =========================================================================
     function openCredModal(portalId) {
-      const p = state.portals.find(x => x.portalId === portalId);
-      const u = state.currentUser;
-      if (!p || !u) return;
-
+      const p = db.portals.find(x => x.id === portalId);
+      if (!p || !currentUser) return;
       activeCredPortalId = portalId;
-      const cred = (u.portalCreds && u.portalCreds[portalId]) || { userId: "", password: "" };
-
-      document.getElementById("cred-modal-title").textContent = `${p.portalName} (${p.portalId}) — Saved Credentials`;
-      document.getElementById("cred-source-note").textContent =
-        "Stored permanently in your Master_Users row on Google Sheets (with automatic legacy sheet fallback). Accessible across Incognito and all devices.";
-      document.getElementById("cred-id-input").value = cred.userId || "";
-      document.getElementById("cred-pass-input").value = cred.password || "";
+      const c = getPortalCred(portalId);
+      document.getElementById("cred-modal-title").textContent = `${p.name} (${p.id}) — Saved ID / Pass`;
+      document.getElementById("cred-source-note").textContent = c.source
+        ? `Loaded from Google Sheet (${c.source}). Any update saves permanently across all devices & Incognito.`
+        : "No credentials saved yet. Enter ID & Password below to save permanently in Master_Users sheet.";
+      document.getElementById("cred-id-input").value = c.id || "";
+      document.getElementById("cred-pass-input").value = c.pass || "";
       document.getElementById("cred-modal").classList.remove("hidden");
     }
 
@@ -1229,742 +935,459 @@
       document.getElementById("cred-modal").classList.add("hidden");
     }
 
-    async function savePortalCredToSheet() {
-      if (!state.currentUser || !activeCredPortalId) return;
-      const portalUserId = document.getElementById("cred-id-input").value.trim();
-      const portalPassword = document.getElementById("cred-pass-input").value.trim();
+    async function savePortalCred() {
+      if (!currentUser || !activeCredPortalId) return;
+      const savedId = document.getElementById("cred-id-input").value.trim();
+      const savedPass = document.getElementById("cred-pass-input").value.trim();
+      const btn = document.getElementById("btn-save-cred");
+      btn.disabled = true;
+      btn.textContent = "Saving...";
 
-      setLoader(true, `Saving ${activeCredPortalId} credentials to Google Sheet...`);
       try {
         const res = await apiPost({
-          action: "savePortalCred",
-          userId: state.currentUser.userId,
-          mobile: state.currentUser.mobile,
+          action: "saveCred",
+          mobile: currentUser.mobile,
           portalId: activeCredPortalId,
-          portalUserId,
-          portalPassword
+          savedId,
+          savedPass
         });
+        btn.disabled = false;
+        btn.textContent = "Save Permanently";
 
-        if (res && res.status === "success") {
-          if (!state.currentUser.portalCreds) state.currentUser.portalCreds = {};
-          state.currentUser.portalCreds[activeCredPortalId] = {
-            userId: portalUserId,
-            password: portalPassword
-          };
+        if (res && res.ok) {
+          currentUser.portalCreds = currentUser.portalCreds || {};
+          currentUser.portalCreds[activeCredPortalId] = { id: savedId, pass: savedPass, source: "Master_Users" };
           closeCredModal();
-          renderPermittedPortals();
-          showToast("Credentials saved permanently to Google Sheet!");
+          renderPortals();
+          showToast("Saved permanently in Google Sheet!");
         } else {
-          showToast((res && res.message) || "Could not save credentials.", true);
+          showToast((res && res.message) || "Failed to save.");
         }
-      } catch (err) {
-        showToast("Network error saving credentials.", true);
-      } finally {
-        setLoader(false);
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = "Save Permanently";
+        showToast("Network error while saving.");
       }
     }
 
+    function copyText(inputId, label) {
+      const el = document.getElementById(inputId);
+      el.select();
+      document.execCommand("copy");
+      showToast(`${label} copied.`);
+    }
+
     // =========================================================================
-    // 9. INTER-OFFICE MESSENGER & PERSONAL NOTICES (USER SIDE)
+    // 9. PERSONAL NOTICES & INTER-OFFICE MESSENGER
     // =========================================================================
-    function toggleMessagesDrawer(forceOpen) {
-      const drawer = document.getElementById("messages-drawer");
-      const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : drawer.classList.contains("hidden");
-      drawer.classList.toggle("hidden", !shouldOpen);
-      if (shouldOpen) {
-        loadMessagesFromServer(false);
-        drawer.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-
-    async function loadMessagesFromServer(showFeedback = false) {
-      const u = state.currentUser;
-      if (!u) return;
-      try {
-        const res = await apiGet({
-          action: "getMessages",
-          mobile: u.mobile,
-          segment: u.role || u.segment || "",
-          isAdmin: u.isAdmin ? "true" : "false"
-        });
-        if (res && res.status === "success" && Array.isArray(res.messages)) {
-          state.messages = res.messages;
-          renderUserMessages();
-          if (state.currentUser.isAdmin) renderAdminMessagesLog();
-          if (showFeedback) showToast("Inbox updated.");
-        }
-      } catch (e) {}
-    }
-
-    function populateUserMessageRecipients() {
-      const u = state.currentUser;
-      const select = document.getElementById("user-msg-target");
-      if (!select || !u) return;
-
-      const colleagues = (state.activeUsers.length ? state.activeUsers : state.users)
-        .filter(x => x.status === "Active" && x.mobile !== u.mobile);
-
-      select.innerHTML =
-        `<option value="ALL|ALL|All Team">All Team (Group Broadcast)</option>` +
-        colleagues.map(c =>
-          `<option value="INDIVIDUAL|${esc(c.mobile)}|${esc(c.fullName)}">${esc(c.fullName)} (${esc(c.role)} - ${esc(c.mobile)})</option>`
-        ).join("");
-    }
-
-    function renderUserMessages() {
-      const u = state.currentUser;
-      if (!u) return;
-
-      const unreadMsgs = state.messages.filter(m => !m.isRead && m.senderMobile !== u.mobile);
-      const unreadCount = unreadMsgs.length;
-
+    function renderPersonalBanner() {
+      if (!currentUser) return;
+      const unreadCount = db.messages.filter(m => !m.isRead).length;
       const badge = document.getElementById("unread-badge");
-      const dashPill = document.getElementById("dash-unread-pill");
       if (unreadCount > 0) {
         badge.textContent = unreadCount;
         badge.classList.remove("hidden");
-        dashPill.textContent = `${unreadCount} New`;
-        dashPill.classList.remove("hidden");
       } else {
         badge.classList.add("hidden");
-        dashPill.classList.add("hidden");
       }
 
-      // Highlight unread Personal / Segment notices right above portals grid
-      const highlightBox = document.getElementById("personal-notices-highlight");
-      const urgentPersonal = unreadMsgs.filter(m => m.targetType === "INDIVIDUAL" || m.targetType === "SEGMENT");
-      if (urgentPersonal.length > 0) {
-        highlightBox.classList.remove("hidden");
-        highlightBox.innerHTML = urgentPersonal.map(m => `
-          <div class="bg-amber-50 border-l-4 border-[#b91c1c] border-y border-r border-amber-300 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
-            <div class="space-y-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#b91c1c] text-white">${esc(m.subjectTag || "Personal Notice")}</span>
-                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-200 text-amber-950">${m.targetType === "INDIVIDUAL" ? "Direct For You" : `Segment: ${esc(m.targetValue)}`}</span>
-                <span class="text-xs font-bold text-slate-700">From: ${esc(m.senderName)}</span>
-                <span class="text-[11px] text-slate-500">${esc(m.timestamp)}</span>
-              </div>
-              <p class="text-xs sm:text-sm font-bold text-slate-900">${esc(m.message)}</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="markMessageAsRead('${esc(m.msgId)}')"
-                class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-3.5 py-2">
-                ✓ Mark Read
-              </button>
-              <button type="button" onclick="toggleMessagesDrawer(true)"
-                class="rounded-xl bg-white border border-amber-300 hover:bg-amber-100 text-slate-900 text-xs font-bold px-3 py-2">
-                Reply
-              </button>
-            </div>
-          </div>
-        `).join("");
-      } else {
-        highlightBox.classList.add("hidden");
-        highlightBox.innerHTML = "";
-      }
-
-      // Render full inbox list inside Messages Drawer
-      const feed = document.getElementById("user-messages-feed");
-      if (!state.messages.length) {
-        feed.innerHTML = `<p class="text-xs text-slate-500 p-4 bg-sky-50/50 rounded-xl border border-sky-100">No messages or personal notices yet.</p>`;
+      const personalItems = db.messages.filter(m => m.targetType === "INDIVIDUAL" || m.targetType === "SEGMENT").slice(0, 3);
+      const banner = document.getElementById("personal-notice-banner");
+      const list = document.getElementById("personal-notice-items");
+      if (!personalItems.length) {
+        banner.classList.add("hidden");
         return;
       }
-
-      feed.innerHTML = state.messages.map(m => {
-        const isMine = m.senderMobile === u.mobile;
-        const isUnread = !m.isRead && !isMine;
-        const scopeLabel = m.targetType === "ALL"
-          ? "All Team"
-          : m.targetType === "SEGMENT"
-            ? `Segment: ${m.targetValue}`
-            : `To: ${m.targetName || m.targetValue}`;
-
-        return `
-          <div class="p-3.5 rounded-xl border ${isUnread ? "bg-amber-50/80 border-amber-300" : isMine ? "bg-sky-50/70 border-sky-200" : "bg-white border-sky-100"} space-y-1.5">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="flex flex-wrap items-center gap-1.5">
-                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-slate-900 text-white">${esc(m.subjectTag || "Chat")}</span>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-950">${esc(scopeLabel)}</span>
-                <span class="text-xs font-extrabold text-slate-900">${isMine ? "You" : esc(m.senderName)}</span>
-              </div>
-              <span class="text-[11px] text-slate-500">${esc(m.timestamp)}</span>
-            </div>
-            <p class="text-xs sm:text-sm text-slate-800 whitespace-pre-line leading-relaxed">${esc(m.message)}</p>
-            ${isUnread ? `
-              <div class="pt-1">
-                <button type="button" onclick="markMessageAsRead('${esc(m.msgId)}')"
-                  class="text-[11px] font-extrabold text-emerald-700 hover:underline">
-                  ✓ Mark as Read
-                </button>
-              </div>
-            ` : ""}
+      banner.classList.remove("hidden");
+      list.innerHTML = personalItems.map(m => `
+        <div class="bg-white border border-amber-200 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div>
+            <span class="font-extrabold text-[#b91c1c]">[${m.tag}]</span>
+            <span class="font-bold text-slate-900">${m.senderName}:</span>
+            <span class="text-slate-800">${m.message}</span>
+            <span class="text-[10px] text-slate-500 ml-1">(${m.time})</span>
           </div>
-        `;
-      }).join("");
+          ${!m.isRead ? `<button type="button" onclick="markMessageRead('${m.msgId}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg font-bold">Mark Read</button>` : `<span class="text-[10px] font-bold text-emerald-700">✓ Read</span>`}
+        </div>
+      `).join("");
     }
 
-    document.getElementById("user-send-msg-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const u = state.currentUser;
-      if (!u) return;
+    function openMessagesModal() {
+      renderMessagesFeed();
+      document.getElementById("msg-modal").classList.remove("hidden");
+    }
 
-      const rawTarget = document.getElementById("user-msg-target").value.split("|");
-      const targetType = rawTarget[0] || "ALL";
-      const targetValue = rawTarget[1] || "ALL";
-      const targetName = rawTarget[2] || "All Team";
-      const subjectTag = document.getElementById("user-msg-tag").value;
-      const message = document.getElementById("user-msg-text").value.trim();
-      if (!message) return;
+    function closeMessagesModal() {
+      document.getElementById("msg-modal").classList.add("hidden");
+    }
 
-      setLoader(true, "Sending message...");
+    async function refreshMessages() {
+      if (!currentUser) return;
       try {
-        const res = await apiPost({
-          action: "sendMessage",
-          senderMobile: u.mobile,
-          senderName: u.fullName,
-          targetType,
-          targetValue,
-          targetName,
-          subjectTag,
-          message
+        const res = await apiGet({
+          action: "messages",
+          mobile: currentUser.mobile,
+          role: currentUser.role || "User",
+          isAdmin: String(Boolean(currentUser.isAdmin))
         });
-        if (res && res.status === "success") {
-          document.getElementById("user-msg-text").value = "";
-          await loadMessagesFromServer(false);
-          showToast("Message sent & saved to Google Sheet.");
-        } else {
-          showToast((res && res.message) || "Failed to send message.", true);
-        }
-      } catch (err) {
-        showToast("Network error sending message.", true);
-      } finally {
-        setLoader(false);
-      }
-    });
-
-    async function markMessageAsRead(msgId) {
-      const u = state.currentUser;
-      if (!u) return;
-      try {
-        const res = await apiPost({
-          action: "markMessageRead",
-          msgId,
-          mobile: u.mobile
-        });
-        if (res && res.status === "success") {
-          const target = state.messages.find(m => m.msgId === msgId);
-          if (target) target.isRead = true;
-          renderUserMessages();
-          showToast("Marked as read.");
+        if (res && res.ok && Array.isArray(res.messages)) {
+          db.messages = res.messages;
+          saveDb();
+          renderPersonalBanner();
+          renderMessagesFeed();
+          showToast("Messages refreshed.");
         }
       } catch (e) {}
     }
 
-    // =========================================================================
-    // 10. PAGE 3: ADMIN CONTROL PANEL
-    // =========================================================================
-    async function openAdminPanel() {
-      if (!state.currentUser || !state.currentUser.isAdmin) return;
-      showPage("admin");
-      await refreshAdminData();
-    }
+    function renderMessagesFeed() {
+      const feed = document.getElementById("messages-feed");
+      const targetSel = document.getElementById("modal-msg-target");
 
-    function backToMyPortals() {
-      renderPermittedPortals();
-      showPage("portals");
-    }
-
-    async function refreshAdminData() {
-      setLoader(true, "Loading latest Admin database...");
-      try {
-        const initRes = await apiGet({ action: "init" });
-        if (initRes && initRes.status === "success") {
-          applyInitPayload(initRes);
-        }
-        await loadMessagesFromServer(false);
-        renderPendingApprovals();
-        populateAdminUserPicker();
-        renderAdminPortalCredInputs({});
-        renderMatrix();
-        onAdminTargetTypeChange();
-        renderAdminMessagesLog();
-        renderLogs();
-      } catch (e) {
-        showToast("Error loading admin data.", true);
-      } finally {
-        setLoader(false);
+      // Populate recipients if admin loaded users
+      if (targetSel && db.users.length) {
+        const userOpts = db.users
+          .filter(u => u.mobile !== currentUser.mobile)
+          .map(u => `<option value="INDIVIDUAL|${u.mobile}|${u.name}">To: ${u.name} (${u.role})</option>`)
+          .join("");
+        targetSel.innerHTML = `<option value="ALL|ALL|All Team">To: All Team</option>` + userOpts;
       }
-    }
 
-    // 10.1 Pending Sign-Up Approvals
-    function renderPendingApprovals() {
-      const box = document.getElementById("pending-list");
-      const badge = document.getElementById("pending-count-badge");
-      badge.textContent = `${state.pending.length} Pending`;
-
-      if (!state.pending.length) {
-        box.innerHTML = `<p class="text-xs text-slate-500">No pending sign-up requests right now.</p>`;
+      if (!db.messages.length) {
+        feed.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">No messages or personal notices yet.</p>`;
         return;
       }
 
-      box.innerHTML = state.pending.map((p, idx) => {
-        const segOpts = state.segments.map(s =>
-          `<option value="${esc(s)}" ${s === p.role ? "selected" : ""}>${esc(s)}</option>`
-        ).join("");
-
-        return `
-          <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 flex flex-wrap items-center justify-between gap-3">
-            <div class="text-xs sm:text-sm space-y-0.5">
-              <div><strong class="text-slate-900">${esc(p.fullName)}</strong> • <span class="font-mono">${esc(p.mobile)}</span></div>
-              <div class="text-xs text-slate-600">Hospital: ${esc(p.hospitalName || "—")} • Requested: ${esc(p.createdDate || "")}</div>
+      feed.innerHTML = db.messages.map(m => `
+        <div class="bg-white border ${m.isRead ? 'border-sky-200' : 'border-amber-400'} rounded-xl p-3 space-y-1">
+          <div class="flex flex-wrap items-center justify-between gap-1 text-[11px]">
+            <div>
+              <span class="font-extrabold text-[#b91c1c]">${m.senderName}</span>
+              <span class="text-slate-500">→ ${m.targetName}</span>
+              <span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-950 font-bold">${m.tag}</span>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <select id="pending-seg-${idx}" class="rounded-lg border border-amber-300 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-900">
-                ${segOpts}
-              </select>
-              <button type="button" onclick="approvePendingUser(${idx})"
-                class="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-3.5 py-1.5">
-                ✓ Approve
-              </button>
-            </div>
+            <span class="text-slate-400">${m.time}</span>
           </div>
-        `;
-      }).join("");
+          <p class="text-xs sm:text-sm text-slate-900">${m.message}</p>
+          <div class="flex items-center justify-between pt-1 text-[11px]">
+            <span class="text-slate-500">Read by: ${m.readBy.length}</span>
+            ${!m.isRead ? `<button type="button" onclick="markMessageRead('${m.msgId}')" class="text-emerald-700 font-extrabold underline">Mark Read</button>` : `<span class="text-emerald-700 font-bold">✓ Read</span>`}
+          </div>
+        </div>
+      `).join("");
     }
 
-    async function approvePendingUser(idx) {
-      const req = state.pending[idx];
-      if (!req) return;
-      const chosenSegment = document.getElementById(`pending-seg-${idx}`).value;
+    async function markMessageRead(msgId) {
+      if (!currentUser) return;
+      const m = db.messages.find(x => x.msgId === msgId);
+      if (m) {
+        m.isRead = true;
+        if (!m.readBy.includes(currentUser.mobile)) m.readBy.push(currentUser.mobile);
+      }
+      renderPersonalBanner();
+      renderMessagesFeed();
+      try {
+        await apiPost({ action: "markRead", msgId, mobile: currentUser.mobile });
+      } catch (e) {}
+    }
 
-      setLoader(true, `Approving ${req.fullName}...`);
+    document.getElementById("modal-msg-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const rawTarget = document.getElementById("modal-msg-target").value.split("|");
+      const text = document.getElementById("modal-msg-input").value.trim();
+      if (!text) return;
+
+      document.getElementById("modal-msg-input").value = "";
       try {
         const res = await apiPost({
-          action: "approveUser",
-          userId: req.userId,
-          mobile: req.mobile,
-          role: chosenSegment
+          action: "sendMessage",
+          senderMobile: currentUser.mobile,
+          senderName: currentUser.name,
+          targetType: rawTarget[0],
+          targetValue: rawTarget[1],
+          targetName: rawTarget[2],
+          tag: rawTarget[0] === "INDIVIDUAL" ? "Direct Message" : "Team Update",
+          message: text
         });
-        if (res && res.status === "success") {
-          showToast(res.message || `${req.fullName} approved!`);
-          await refreshAdminData();
-        } else {
-          showToast((res && res.message) || "Approval failed.", true);
-        }
-      } catch (e) {
-        showToast("Network error approving user.", true);
-      } finally {
-        setLoader(false);
-      }
-    }
-
-    // 10.2 Add / Edit User & Portal Credentials Directly
-    function populateAdminUserPicker() {
-      const picker = document.getElementById("admin-edit-user-picker");
-      if (!picker) return;
-      picker.innerHTML =
-        `<option value="">+ Create Brand New User</option>` +
-        state.users.map(u =>
-          `<option value="${esc(u.userId)}">Edit: ${esc(u.fullName)} (${esc(u.mobile)} - ${esc(u.role)})</option>`
-        ).join("");
-    }
-
-    function renderAdminPortalCredInputs(portalCredsObj = {}) {
-      const grid = document.getElementById("au-portal-creds-grid");
-      if (!grid) return;
-
-      if (!state.portals.length) {
-        grid.innerHTML = `<p class="text-xs text-slate-500">No portals configured yet.</p>`;
-        return;
-      }
-
-      grid.innerHTML = state.portals.map(p => {
-        const c = portalCredsObj[p.portalId] || { userId: "", password: "" };
-        return `
-          <div class="bg-white border border-sky-200 rounded-xl p-3 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold text-slate-900">${esc(p.portalId)} — ${esc(p.portalName)}</span>
-              <span class="text-[10px] font-bold text-slate-500">${esc(p.category)}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <input type="text" data-cred-portal="${esc(p.portalId)}" data-cred-field="userId"
-                value="${esc(c.userId || "")}" placeholder="${esc(p.portalId)}_UserID"
-                class="rounded-lg border border-sky-200 bg-sky-50/40 px-2.5 py-1.5 text-xs font-semibold" />
-              <input type="text" data-cred-portal="${esc(p.portalId)}" data-cred-field="password"
-                value="${esc(c.password || "")}" placeholder="${esc(p.portalId)}_Password"
-                class="rounded-lg border border-sky-200 bg-sky-50/40 px-2.5 py-1.5 text-xs font-mono font-bold" />
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function loadUserIntoAdminForm(userId) {
-      if (!userId) {
-        resetAdminUserForm();
-        return;
-      }
-      const u = state.users.find(x => x.userId === userId);
-      if (!u) return;
-
-      document.getElementById("au-userid").value = u.userId;
-      document.getElementById("au-mobile").value = u.mobile;
-      document.getElementById("au-name").value = u.fullName;
-      document.getElementById("au-hospital").value = u.hospitalName || "";
-      document.getElementById("au-segment").value = u.role || "User";
-      document.getElementById("au-password").value = u.password || "";
-      document.getElementById("au-is-admin").checked = Boolean(u.isAdmin);
-      document.getElementById("au-notes").value = u.notes || "";
-      renderAdminPortalCredInputs(u.portalCreds || {});
-    }
-
-    function resetAdminUserForm() {
-      document.getElementById("admin-edit-user-picker").value = "";
-      document.getElementById("au-userid").value = "";
-      document.getElementById("admin-upsert-user-form").reset();
-      renderAdminPortalCredInputs({});
-    }
-
-    document.getElementById("admin-upsert-user-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const portalCreds = {};
-      document.querySelectorAll("#au-portal-creds-grid input[data-cred-portal]").forEach(inp => {
-        const pid = inp.dataset.credPortal;
-        const field = inp.dataset.credField;
-        if (!portalCreds[pid]) portalCreds[pid] = {};
-        portalCreds[pid][field] = inp.value.trim();
-      });
-
-      const payload = {
-        action: "adminSaveUser",
-        userId: document.getElementById("au-userid").value.trim(),
-        mobile: document.getElementById("au-mobile").value.trim(),
-        fullName: document.getElementById("au-name").value.trim(),
-        hospitalName: document.getElementById("au-hospital").value.trim(),
-        role: document.getElementById("au-segment").value,
-        password: document.getElementById("au-password").value.trim(),
-        isAdmin: document.getElementById("au-is-admin").checked,
-        status: "Active",
-        notes: document.getElementById("au-notes").value.trim(),
-        portalCreds
-      };
-
-      setLoader(true, "Saving user & portal credentials to Master_Users...");
-      try {
-        const res = await apiPost(payload);
-        if (res && res.status === "success") {
-          showToast(res.message || "User & credentials saved to sheet!");
-          resetAdminUserForm();
-          await refreshAdminData();
-        } else {
-          showToast((res && res.message) || "Failed to save user.", true);
+        if (res && res.ok) {
+          await refreshMessages();
+          showToast("Message sent & saved.");
         }
       } catch (err) {
-        showToast("Network error saving user.", true);
-      } finally {
-        setLoader(false);
+        showToast("Failed to send message.");
       }
     });
 
-    // 10.3 Tick-Box Access Matrix
-    function renderMatrix() {
-      const head = document.getElementById("matrix-head");
-      const body = document.getElementById("matrix-body");
-      const filterSeg = document.getElementById("matrix-segment-filter").value || "ALL";
+    // =========================================================================
+    // 10. ADMIN CONTROL PANEL
+    // =========================================================================
+    async function openAdminPanel() {
+      if (!currentUser || !currentUser.isAdmin) return;
+      showPage("admin");
+      renderSegmentSelects();
+      renderAdminUserPortalFields();
+      renderPending();
+      renderMatrix();
+      updatePmTargetOptions();
+      renderLogs();
+      renderNotices();
 
-      head.innerHTML = `
-        <tr>
-          <th class="py-2.5 px-3 font-extrabold text-slate-900">User / Segment / Hospital</th>
-          ${state.portals.map(p => `
-            <th class="py-2.5 px-3 text-center font-extrabold text-slate-900">
-              <span class="text-[#b91c1c]">${esc(p.portalId)}</span><br>
-              <span class="text-[10px] font-semibold text-slate-600">${esc(p.portalName)}</span>
-            </th>
-          `).join("")}
-        </tr>
-      `;
+      // Fetch freshest admin data from Google Sheet
+      try {
+        const remote = await apiGet({ action: "adminData" });
+        if (remote && remote.ok) {
+          if (Array.isArray(remote.users)) db.users = remote.users;
+          if (Array.isArray(remote.pending)) db.pending = remote.pending;
+          if (Array.isArray(remote.logs)) db.logs = remote.logs;
+          if (Array.isArray(remote.portals)) db.portals = remote.portals;
+          if (Array.isArray(remote.segments)) db.segments = remote.segments;
+          saveDb();
+          renderSegmentSelects();
+          renderAdminUserPortalFields();
+          renderPending();
+          renderMatrix();
+          updatePmTargetOptions();
+          renderLogs();
+        }
+      } catch (e) {}
+    }
 
-      const activeList = state.users.filter(u => u.status === "Active");
-      const visibleUsers = filterSeg === "ALL"
-        ? activeList
-        : activeList.filter(u => (u.role || "").toLowerCase() === filterSeg.toLowerCase());
+    function renderAdminUserPortalFields() {
+      const box = document.getElementById("admin-user-portal-creds");
+      if (!box) return;
+      box.innerHTML = db.portals.map(p => `
+        <div class="bg-white border border-sky-200 rounded-xl p-2.5 space-y-1.5">
+          <div class="text-xs font-extrabold text-[#b91c1c]">${p.id} — ${p.name}</div>
+          <div class="grid grid-cols-2 gap-2">
+            <input id="au-cred-id-${p.id}" type="text" placeholder="${p.id} UserID" class="rounded-lg border border-sky-200 px-2.5 py-1.5 text-xs font-semibold" />
+            <input id="au-cred-pass-${p.id}" type="text" placeholder="${p.id} Password" class="rounded-lg border border-sky-200 px-2.5 py-1.5 text-xs font-mono" />
+          </div>
+        </div>
+      `).join("");
+    }
 
-      if (!visibleUsers.length) {
-        body.innerHTML = `<tr><td colspan="${state.portals.length + 1}" class="py-4 px-3 text-center text-xs text-slate-500">No active users found in this segment.</td></tr>`;
+    document.getElementById("admin-user-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const portalCreds = {};
+      db.portals.forEach(p => {
+        const idVal = document.getElementById(`au-cred-id-${p.id}`)?.value.trim() || "";
+        const passVal = document.getElementById(`au-cred-pass-${p.id}`)?.value.trim() || "";
+        if (idVal || passVal) portalCreds[p.id] = { id: idVal, pass: passVal };
+      });
+
+      const userPayload = {
+        mobile: document.getElementById("au-mobile").value.trim(),
+        name: document.getElementById("au-name").value.trim(),
+        hospital: document.getElementById("au-hospital").value.trim(),
+        role: document.getElementById("au-role").value,
+        password: document.getElementById("au-password").value.trim(),
+        status: "Active",
+        portalCreds
+      };
+
+      try {
+        const res = await apiPost({ action: "saveUser", user: userPayload });
+        if (res && res.ok) {
+          e.target.reset();
+          showToast(res.message || "User & Portal Credentials saved!");
+          openAdminPanel();
+        } else {
+          showToast((res && res.message) || "Failed to save user.");
+        }
+      } catch (err) {
+        showToast("Server error saving user.");
+      }
+    });
+
+    function renderPending() {
+      const box = document.getElementById("pending-list");
+      if (!db.pending.length) {
+        box.innerHTML = `<p class="text-xs text-slate-500">No pending sign-up requests.</p>`;
         return;
       }
+      box.innerHTML = db.pending.map((p, idx) => `
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs sm:text-sm">
+            <strong>${p.name}</strong> • ${p.mobile} • <span class="text-slate-600">${p.hospital}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="pending-role-${idx}" class="rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-xs font-bold">
+              ${db.segments.map(s => `<option value="${s}" ${s === p.role ? 'selected' : ''}>${s}</option>`).join("")}
+            </select>
+            <button type="button" onclick="approvePending(${idx})"
+              class="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-1.5">
+              Approve
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
 
-      body.innerHTML = visibleUsers.map(u => {
-        const accessMap = u.access || {};
+    async function approvePending(idx) {
+      const req = db.pending[idx];
+      if (!req) return;
+      const role = document.getElementById(`pending-role-${idx}`)?.value || req.role || "User";
+      try {
+        const res = await apiPost({ action: "approveUser", mobile: req.mobile, role });
+        if (res && res.ok) {
+          showToast(`${req.name} approved as ${role}.`);
+          openAdminPanel();
+        }
+      } catch (e) {
+        showToast("Error approving user.");
+      }
+    }
+
+    function renderMatrix() {
+      const filter = document.getElementById("matrix-segment-filter")?.value || "ALL";
+      const filteredUsers = filter === "ALL" ? db.users : db.users.filter(u => (u.role || "User") === filter);
+
+      const head = document.getElementById("matrix-head");
+      head.innerHTML = `<tr>
+        <th class="py-2.5 px-3 font-extrabold">User / Category</th>
+        ${db.portals.map(p => `<th class="py-2.5 px-3 text-center font-extrabold">${p.id}<br><span class="text-[10px] font-semibold">${p.name}</span></th>`).join("")}
+      </tr>`;
+
+      const body = document.getElementById("matrix-body");
+      body.innerHTML = filteredUsers.map(u => {
+        const realIdx = db.users.findIndex(x => x.mobile === u.mobile);
         return `
-          <tr class="hover:bg-sky-50/40">
+          <tr>
             <td class="py-2.5 px-3">
-              <div class="flex flex-wrap items-center gap-1.5">
-                <span class="font-bold text-slate-900">${esc(u.fullName)}</span>
-                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-950">${esc(u.role)}</span>
-              </div>
-              <div class="text-xs text-slate-600 font-mono">${esc(u.mobile)} • ${esc(u.hospitalName || "—")}</div>
+              <div class="font-bold text-slate-900">${u.name} <span class="text-xs font-normal text-slate-500">(${u.mobile})</span></div>
+              <div class="text-[11px] text-slate-600">${u.hospital} • <span class="font-bold text-[#b91c1c]">${u.role || "User"}</span></div>
             </td>
-            ${state.portals.map(p => {
-              const isChecked = accessMap[p.portalId] === true;
-              return `
-                <td class="py-2.5 px-3 text-center">
-                  <input type="checkbox" class="tick-box" ${isChecked ? "checked" : ""}
-                    onchange="toggleMatrixCheckbox('${esc(u.userId)}', '${esc(p.portalId)}', this.checked)" />
-                </td>
-              `;
+            ${db.portals.map(p => {
+              const checked = Array.isArray(u.access) && u.access.includes(p.id);
+              return `<td class="py-2.5 px-3 text-center">
+                <input type="checkbox" class="tick-box" ${checked ? "checked" : ""} onchange="toggleTick(${realIdx}, '${p.id}', this.checked)" />
+              </td>`;
             }).join("")}
           </tr>
         `;
       }).join("");
     }
 
-    function toggleMatrixCheckbox(userId, portalId, checked) {
-      const u = state.users.find(x => x.userId === userId);
+    function toggleTick(uIdx, portalId, checked) {
+      const u = db.users[uIdx];
       if (!u) return;
-      if (!u.access || Array.isArray(u.access)) u.access = {};
-      u.access[portalId] = Boolean(checked);
+      u.access = u.access || [];
+      if (checked && !u.access.includes(portalId)) u.access.push(portalId);
+      if (!checked) u.access = u.access.filter(x => x !== portalId);
     }
 
     async function saveMatrix() {
-      const activeList = state.users.filter(u => u.status === "Active");
-      const matrixPayload = activeList.map(u => ({
-        userId: u.userId,
-        mobile: u.mobile,
-        fullName: u.fullName,
-        access: u.access || {}
-      }));
-
-      setLoader(true, "Saving Access Matrix to Google Sheet...");
       try {
-        const res = await apiPost({
-          action: "saveMatrix",
-          matrix: matrixPayload
-        });
-        if (res && res.status === "success") {
-          showToast(res.message || "Access Matrix saved!");
-          // Update current admin's own permitted portals if changed
-          const me = activeList.find(x => x.userId === state.currentUser.userId);
-          if (me) {
-            state.currentUser.access = state.portals
-              .filter(p => me.access && me.access[p.portalId] === true)
-              .map(p => p.portalId);
-          }
-        } else {
-          showToast((res && res.message) || "Failed to save matrix.", true);
-        }
+        const res = await apiPost({ action: "saveMatrix", users: db.users });
+        if (res && res.ok) showToast("Access Matrix saved to Google Sheet.");
       } catch (e) {
-        showToast("Network error saving matrix.", true);
-      } finally {
-        setLoader(false);
+        showToast("Failed to save Matrix.");
       }
     }
 
-    // 10.4 Admin Personal Notice / Direct Message Sender
-    function onAdminTargetTypeChange() {
-      const type = document.getElementById("adm-msg-target-type").value;
-      const wrap = document.getElementById("adm-msg-target-value-wrap");
-      const label = document.getElementById("adm-msg-target-label");
-      const select = document.getElementById("adm-msg-target-value");
-
+    function updatePmTargetOptions() {
+      const type = document.getElementById("pm-target-type").value;
+      const wrap = document.getElementById("pm-target-value-wrap");
+      const sel = document.getElementById("pm-target-value");
       if (type === "ALL") {
         wrap.classList.add("hidden");
         return;
       }
-
       wrap.classList.remove("hidden");
       if (type === "INDIVIDUAL") {
-        label.textContent = "Select Individual Person";
-        const activeList = state.users.filter(u => u.status === "Active");
-        select.innerHTML = activeList.map(u =>
-          `<option value="${esc(u.mobile)}|${esc(u.fullName)}">${esc(u.fullName)} (${esc(u.role)} - ${esc(u.mobile)})</option>`
-        ).join("");
-      } else if (type === "SEGMENT") {
-        label.textContent = "Select Category / Segment";
-        select.innerHTML = state.segments.map(s =>
-          `<option value="${esc(s)}|${esc(s)}">${esc(s)}</option>`
-        ).join("");
+        sel.innerHTML = db.users.map(u => `<option value="${u.mobile}|${u.name}">${u.name} (${u.mobile} - ${u.role})</option>`).join("");
+      } else {
+        sel.innerHTML = db.segments.map(s => `<option value="${s}|${s} Team">${s}</option>`).join("");
       }
     }
 
-    document.getElementById("admin-send-notice-form").addEventListener("submit", async (e) => {
+    document.getElementById("admin-personal-msg-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const u = state.currentUser;
-      if (!u) return;
-
-      const targetType = document.getElementById("adm-msg-target-type").value;
-      let targetValue = "ALL";
-      let targetName = "All Staff";
-
-      if (targetType !== "ALL") {
-        const parts = document.getElementById("adm-msg-target-value").value.split("|");
-        targetValue = parts[0] || "";
-        targetName = parts[1] || targetValue;
-      }
-
-      const subjectTag = document.getElementById("adm-msg-tag").value;
-      const message = document.getElementById("adm-msg-body").value.trim();
+      const targetType = document.getElementById("pm-target-type").value;
+      const rawVal = document.getElementById("pm-target-value").value.split("|");
+      const targetValue = targetType === "ALL" ? "ALL" : (rawVal[0] || "");
+      const targetName = targetType === "ALL" ? "All Team" : (rawVal[1] || targetValue);
+      const tag = document.getElementById("pm-tag").value;
+      const message = document.getElementById("pm-message-text").value.trim();
       if (!message) return;
 
-      setLoader(true, "Dispatching notice & saving to sheet...");
       try {
         const res = await apiPost({
           action: "sendMessage",
-          senderMobile: u.mobile,
-          senderName: u.fullName,
+          senderMobile: currentUser.mobile,
+          senderName: currentUser.name,
           targetType,
           targetValue,
           targetName,
-          subjectTag,
+          tag,
           message
         });
-        if (res && res.status === "success") {
-          document.getElementById("adm-msg-body").value = "";
-          await loadMessagesFromServer(false);
-          showToast("Notice dispatched & saved to Personal_Messages!");
-        } else {
-          showToast((res && res.message) || "Failed to send notice.", true);
+        if (res && res.ok) {
+          document.getElementById("pm-message-text").value = "";
+          showToast(`Notice sent to ${targetName} & saved in sheet.`);
         }
       } catch (err) {
-        showToast("Network error dispatching notice.", true);
-      } finally {
-        setLoader(false);
+        showToast("Failed to send personal notice.");
       }
     });
 
-    function renderAdminMessagesLog() {
-      const box = document.getElementById("admin-messages-log");
-      if (!box) return;
-      if (!state.messages.length) {
-        box.innerHTML = `<p class="text-xs text-slate-500 p-4 bg-sky-50/50 rounded-xl border border-sky-100">No personal notices or messages recorded yet.</p>`;
-        return;
-      }
-
-      box.innerHTML = state.messages.map(m => {
-        const targetBadge = m.targetType === "ALL"
-          ? "Broadcast: ALL"
-          : m.targetType === "SEGMENT"
-            ? `Segment: ${m.targetValue}`
-            : `To: ${m.targetName || m.targetValue}`;
-        const readCount = Array.isArray(m.readBy) ? m.readBy.length : 0;
-
-        return `
-          <div class="p-3.5 rounded-xl bg-sky-50/50 border border-sky-200 space-y-1">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="flex flex-wrap items-center gap-1.5">
-                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#b91c1c] text-white">${esc(m.subjectTag || "Notice")}</span>
-                <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-100 text-amber-950 border border-amber-300">${esc(targetBadge)}</span>
-                <span class="text-xs font-bold text-slate-800">From: ${esc(m.senderName)}</span>
-              </div>
-              <span class="text-[11px] font-semibold text-emerald-700">Read by ${readCount}</span>
-            </div>
-            <p class="text-xs sm:text-sm text-slate-900 whitespace-pre-line">${esc(m.message)}</p>
-            <div class="text-[10px] text-slate-500">${esc(m.timestamp)}</div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    // 10.5 Add Portal, Add Segment & Update Global Notice
     document.getElementById("add-portal-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const payload = {
-        action: "addPortal",
-        portalName: document.getElementById("new-p-name").value.trim(),
-        category: document.getElementById("new-p-cat").value.trim(),
-        portalUrl: document.getElementById("new-p-url").value.trim(),
-        description: document.getElementById("new-p-desc").value.trim()
-      };
-
-      setLoader(true, "Adding new portal & expanding Master_Users...");
+      const name = document.getElementById("new-p-name").value.trim();
+      const category = document.getElementById("new-p-cat").value.trim();
+      const url = document.getElementById("new-p-url").value.trim();
+      const id = "P" + (db.portals.length + 1);
       try {
-        const res = await apiPost(payload);
-        if (res && res.status === "success") {
+        const res = await apiPost({ action: "addPortal", portal: { id, name, category, url } });
+        if (res && res.ok) {
           e.target.reset();
-          showToast(res.message || "Portal added!");
-          await refreshAdminData();
-        } else {
-          showToast((res && res.message) || "Failed to add portal.", true);
+          showToast(`Added ${id} (${name}).`);
+          openAdminPanel();
         }
-      } catch (err) {
-        showToast("Network error adding portal.", true);
-      } finally {
-        setLoader(false);
-      }
+      } catch (err) {}
     });
 
     document.getElementById("add-segment-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const segmentName = document.getElementById("new-seg-name").value.trim();
-      if (!segmentName) return;
-
-      setLoader(true, "Adding category to User_Segments...");
+      const segment = document.getElementById("new-seg-name").value.trim();
+      if (!segment) return;
       try {
-        const res = await apiPost({ action: "addSegment", segmentName });
-        if (res && res.status === "success") {
+        const res = await apiPost({ action: "addSegment", segment });
+        if (res && res.ok && Array.isArray(res.segments)) {
+          db.segments = res.segments;
+          saveDb();
+          renderSegmentSelects();
           e.target.reset();
-          if (Array.isArray(res.segments)) state.segments = res.segments;
-          populateSegmentDropdowns();
-          onAdminTargetTypeChange();
-          showToast(res.message || "Category added!");
-        } else {
-          showToast((res && res.message) || "Could not add category.", true);
+          showToast(`Category "${segment}" added.`);
         }
-      } catch (err) {
-        showToast("Network error adding category.", true);
-      } finally {
-        setLoader(false);
-      }
+      } catch (err) {}
     });
 
     async function updateNotice() {
-      const title = document.getElementById("admin-notice-title").value.trim() || "Internal Notice";
-      const message = document.getElementById("admin-notice-box").value.trim();
-      if (!message) {
-        showToast("Please enter notice text.", true);
-        return;
-      }
-
-      setLoader(true, "Publishing global notice...");
+      const val = document.getElementById("admin-notice-box").value.trim();
+      if (!val) return;
       try {
-        const res = await apiPost({
-          action: "updateNotice",
-          title,
-          message,
-          updatedBy: state.currentUser ? state.currentUser.fullName : "Admin"
-        });
-        if (res && res.status === "success") {
-          state.notice = res.notice || { title, message };
-          renderNoticeDisplays();
-          showToast("Global Notice published!");
-        } else {
-          showToast((res && res.message) || "Failed to update notice.", true);
+        const res = await apiPost({ action: "updateNotice", notice: val });
+        if (res && res.ok) {
+          db.notice = val;
+          saveDb();
+          renderNotices();
+          showToast("Public Notice updated.");
         }
-      } catch (err) {
-        showToast("Network error updating notice.", true);
-      } finally {
-        setLoader(false);
-      }
+      } catch (e) {}
     }
 
-    // 10.6 Master Login Audit Logs
     function renderLogs() {
-      const body = document.getElementById("logs-body");
-      if (!state.logs.length) {
-        body.innerHTML = `<tr><td colspan="5" class="py-4 px-3 text-center text-xs text-slate-500">No login logs recorded yet.</td></tr>`;
-        return;
-      }
-
-      body.innerHTML = state.logs.map(l => `
-        <tr class="hover:bg-sky-50/40">
-          <td class="py-2 px-3 text-xs text-slate-600 whitespace-nowrap">${esc(l.timestamp)}</td>
-          <td class="py-2 px-3 font-bold text-slate-900">${esc(l.fullName)}</td>
-          <td class="py-2 px-3 font-mono text-xs">${esc(l.mobile)}</td>
-          <td class="py-2 px-3 text-xs font-semibold text-slate-700">${esc(l.role)}</td>
+      document.getElementById("logs-body").innerHTML = db.logs.map(l => `
+        <tr>
+          <td class="py-2 px-3 text-xs text-slate-600">${l.time}</td>
+          <td class="py-2 px-3 font-bold">${l.name} <span class="text-xs font-normal text-slate-500">(${l.mobile})</span></td>
+          <td class="py-2 px-3 text-xs font-semibold">${l.role || "—"}</td>
+          <td class="py-2 px-3 text-xs font-semibold text-[#b91c1c]">${l.type}</td>
+          <td class="py-2 px-3 font-mono text-xs">${l.lat && l.lng ? `${l.lat}, ${l.lng} (±${l.acc || "?"}m)` : "—"}</td>
           <td class="py-2 px-3 text-xs">
-            <span class="font-bold ${l.status === "SUCCESS" ? "text-emerald-700" : "text-[#b91c1c]"}">${esc(l.status)}</span>
-            <span class="text-slate-500 ml-1">${esc(l.details)}</span>
+            ${l.mapUrl ? `<a href="${l.mapUrl}" target="_blank" rel="noopener noreferrer" class="font-bold text-sky-700 underline">📍 Map ↗</a>` : "—"}
           </td>
         </tr>
       `).join("");
